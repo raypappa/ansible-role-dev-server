@@ -575,15 +575,6 @@
     keep_newer: true
     remote_src: true
     mode: "0755"
-- name: Determine latest version of python
-  tags:
-    - python
-  ansible.builtin.shell: pyenv latest -k 3
-  register: latest_python
-- name: Install latest version of python
-  tags:
-    - python
-  ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
 - name: Install zsh-nvm
   ansible.builtin.git:
     repo: https://github.com/lukechilds/zsh-nvm.git
@@ -593,29 +584,6 @@
   tags:
     - nvm
   ansible.builtin.shell: nvm install --lts --latest-npm -b --no-progress --default
-- name: Install npm modules and symlink
-  tags:
-    - npm
-  block: 
-    - name: Set npm packages to install globally
-      ansible.builtin.set_fact:
-        npm_packages:
-        - jsonlint
-        - yaml-language-server
-        - cspell
-        - aws-azure-login
-        - markdown-toc
-    - name: Install npm modules
-      community.general.npm:
-        global: true
-        name: "{{ item }}"
-      loop: "{{ npm_packages }}"
-    - name: Symlink to global
-      ansible.builtin.file:
-        src: $NVM_BIN/{{ item }}
-        dest: $HOME/.local/bin/{{ item }}
-        state: link
-      loop: "{{ npm_packages }}"
 - name: Install Rust
   tags:
     - rust
@@ -707,6 +675,39 @@
   loop:
     - mdformat
     - pre-commit
+- name: Install npm modules and symlink
+  tags:
+    - npm
+  block: 
+    - name: Set npm packages to install globally
+      ansible.builtin.set_fact:
+        npm_packages:
+        - jsonlint
+        - yaml-language-server
+        - cspell
+        - aws-azure-login
+        - markdown-toc
+    - name: Install npm modules
+      community.general.npm:
+        global: true
+        name: "{{ item }}"
+      loop: "{{ npm_packages }}"
+    - name: Symlink to global
+      ansible.builtin.file:
+        src: $NVM_BIN/{{ item }}
+        dest: $HOME/.local/bin/{{ item }}
+        state: link
+      loop: "{{ npm_packages }}"
+- name: Determine latest version of python
+  tags:
+    - python
+  ansible.builtin.shell: pyenv latest -k 3
+  register: latest_python
+- name: Install latest version of python
+  tags:
+    - python
+  ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
+
 # - name: Setup ruby
 #   tags:
 #     - ruby
