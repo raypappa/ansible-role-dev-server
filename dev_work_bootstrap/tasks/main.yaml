@@ -69,7 +69,8 @@
     repo: https://github.com/nvm-sh/nvm.git
     dest: $HOME/.nvm
     recursive: false
-  tags: nvm
+  tags:
+    - nvm
 - name: Install lazydocker
   tags:
     - lazydocker
