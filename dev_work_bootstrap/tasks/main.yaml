@@ -707,7 +707,14 @@
   tags:
     - python
   ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
-
+- name: Install latest version of go
+  tags:
+    - go
+  ansible.builtin.shell: goenv install latest -q
+- name: Set  latest version of go as global
+  tags:
+    - go
+  ansible.builtin.shell: goenv global latest
 # - name: Setup ruby
 #   tags:
 #     - ruby
