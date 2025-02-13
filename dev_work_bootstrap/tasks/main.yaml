@@ -84,7 +84,10 @@
       register: lazydocker_latest
     - name: "Extract lazydocker"
       ansible.builtin.unarchive:
-        src: https://github.com/jesseduffield/lazydocker/releases/download/{{ lazydocker_latest.json.tag_name }}/lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_{{ ansible_system }}_{{ ansible_architecture }}.tar.gz
+        src: "https://github.com/jesseduffield/lazydocker/releases/download\
+          /{{ lazydocker_latest.json.tag_name }}\
+          /lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         include:
           - lazydocker
@@ -95,7 +98,9 @@
   tags:
     - tflint
   ansible.builtin.unarchive:
-    src: https://github.com/terraform-linters/tflint/releases/latest/download//tflint_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.zip
+    src: "https://github.com/terraform-linters/tflint\
+      /releases/latest/download/\
+      tflint_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.zip"
     include:
       - tflint
     dest: $HOME/.local/bin
@@ -105,7 +110,7 @@
 - name: Install tfenv
   tags:
     - tfenv
-  state: absent
+  # state: absent
   ansible.builtin.git:
     repo: https://github.com/tfutils/tfenv.git
     depth: 1
@@ -124,7 +129,11 @@
       register: tenv_latest
     - name: "Download tenv"
       ansible.builtin.unarchive:
-        src: https://github.com/tofuutils/tenv/releases/download/{{ tenv_latest.json.tag_name }}/tenv_{{ tenv_latest.json.tag_name }}-{{ ansible_system }}-{{ dev_server_ansible_architecture }}.tar.gz
+        # https://github.com/tofuutils/tenv/releases/download/v4.2.4/tenv_v4.2.4_Linux_x86_64.tar.gz
+        src: "https://github.com/tofuutils/tenv/releases/download\
+          /{{ tenv_latest.json.tag_name }}\
+          /tenv_{{ tenv_latest.json.tag_name }}_{{ ansible_system }}_\
+          {{ ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         keep_newer: true
         include:
@@ -138,15 +147,19 @@
   tags:
     - uv
   ansible.builtin.unarchive:
-    src: https://github.com/astral-sh/uv/releases/latest/download/uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}{{"-gnu" if ansible_system == "Linux" else "" }}.tar.gz
+    src: "https://github.com/astral-sh/uv/releases/latest/download\
+      /uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}\
+      {{'-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
     remote_src: true
     keep_newer: true
     mode: "0755"
     dest: $HOME/.local/bin
     creates: $HOME/.local/bin/uvx
     include:
-      - uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}{{"-gnu" if ansible_system == "Linux" else "" }}/uv
-      - uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}{{"-gnu" if ansible_system == "Linux" else "" }}/uvx
+      - "uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}\
+        {{'-gnu' if ansible_system == 'Linux' else '' }}/uv"
+      - "uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}\
+        {{'-gnu' if ansible_system == 'Linux' else '' }}/uvx"
     extra_opts:
       - --strip-components=1
 
@@ -163,7 +176,10 @@
       register: terraform_docs_latest
     - name: "Download terraform-docs"
       ansible.builtin.unarchive:
-        src: https://github.com/terraform-docs/terraform-docs/releases/download/{{ terraform_docs_latest.json.tag_name }}/terraform-docs-{{ terraform_docs_latest.json.tag_name }}-{{ ansible_system | lower }}-{{ dev_server_ansible_architecture }}.tar.gz
+        src: "https://github.com/terraform-docs/terraform-docs/releases/download/\
+          {{ terraform_docs_latest.json.tag_name }}/\
+          terraform-docs-{{ terraform_docs_latest.json.tag_name }}-\
+          {{ ansible_system | lower }}-{{ dev_server_ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         keep_newer: true
         include:
@@ -222,7 +238,10 @@
       register: glow_latest
     - name: "Download glow"
       ansible.builtin.unarchive:
-        src: https://github.com/charmbracelet/glow/releases/download/{{ glow_latest.json.tag_name }}/glow_{{ glow_latest.json.tag_name | replace('v', '') }}_{{ ansible_system }}_{{ ansible_architecture }}.tar.gz
+        src: "https://github.com/charmbracelet/glow/releases/download\
+          /{{ glow_latest.json.tag_name }}/\
+          glow_{{ glow_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         extra_opts:
           - --strip-components=1
@@ -245,7 +264,10 @@
       register: vale_latest
     - name: "Download vale"
       ansible.builtin.unarchive:
-        src: https://github.com/errata-ai/vale/releases/download/{{ vale_latest.json.tag_name }}/vale_{{ vale_latest.json.tag_name | replace('v', '') }}_{{ ansible_system }}_{{ vale_arch }}.tar.gz
+        src: "https://github.com/errata-ai/vale/releases/download\
+          /{{ vale_latest.json.tag_name }}\
+          /vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system }}_{{ vale_arch }}.tar.gz"
         dest: $HOME/.local/bin
         include:
           - vale
@@ -495,6 +517,7 @@
         repo: https://github.com/spaceship-prompt/spaceship-prompt.git
         depth: 1
         dest: "$HOME/.zsh/spaceship"
+        recursive: false
 - name: Install taskfile
   tags:
     - taskfile
@@ -505,7 +528,8 @@
       register: taskfile_tmp_dir
     - name: Download taskfile
       ansible.builtin.unarchive:
-        src: https://github.com/go-task/task/releases/latest/download/task_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz
+        src: "https://github.com/go-task/task/releases/latest/download\
+          /task_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
         dest: "{{ taskfile_tmp_dir.path }}"
         mode: "0755"
         keep_newer: true
@@ -569,29 +593,29 @@
   tags:
     - nvm
   ansible.builtin.shell: nvm install --lts --latest-npm -b --no-progress --default
-- name: Install npm modules
+- name: Install npm modules and symlink
   tags:
     - npm
-  loop:
-    - jsonlint
-    - yaml-language-server
-    - cspell
-    - aws-azure-login
-  community.general.npm:
-    global: true
-    name: "{{ item }}"
-- name: Symlink to global
-  tags:
-    - npm
-  ansible.builtin.file:
-    src: $NVM_BIN/{{ item }}
-    dest: $HOME/.local/bin/{{ item }}
-    state: link
-  loop:
-    - jsonlint
-    - yaml-language-server
-    - cspell
-    - aws-azure-login
+  block: 
+    - name: Set npm packages to install globally
+      ansible.builtin.set_fact:
+        npm_packages:
+        - jsonlint
+        - yaml-language-server
+        - cspell
+        - aws-azure-login
+        - markdown-toc
+    - name: Install npm modules
+      community.general.npm:
+        global: true
+        name: "{{ item }}"
+      loop: "{{ npm_packages }}"
+    - name: Symlink to global
+      ansible.builtin.file:
+        src: $NVM_BIN/{{ item }}
+        dest: $HOME/.local/bin/{{ item }}
+        state: link
+      loop: "{{ npm_packages }}"
 - name: Install Rust
   tags:
     - rust
@@ -675,13 +699,27 @@
         dest: $HOME/.local/bin
         include:
           - ct
+- name: Install tools via uv
+  tags:
+    - uv-tools
+  ansible.builtin.command:
+    cmd: uv tool install {{ item }}
+  loop:
+    - mdformat
+    - pre-commit
+# - name: Setup ruby
+#   tags:
+#     - ruby
+#   ansible.builtin.command:
+#     cmd: 
+# - name: Install gems
+#   tags:
+#     - gems
+#     - ruby
+#   loop:
+#     - mdl
+#   community.general.gem:
+#     name: "{{ item }}"
 
-# ctags
-# mdformat
-# markdown-toc
-# markdownlint
-# tmux
-# zsh
-# pre-commit(via uv)
 # lazygit
-# ykman
+# https://github.com/jesseduffield/lazygit/releases/download/v0.45.2/lazygit_0.45.2_Darwin_arm64.tar.gz
