@@ -68,6 +68,7 @@
   ansible.builtin.git:
     repo: https://github.com/nvm-sh/nvm.git
     dest: $HOME/.nvm
+    recursive: false
   tags: nvm
 - name: Install lazydocker
   tags:
