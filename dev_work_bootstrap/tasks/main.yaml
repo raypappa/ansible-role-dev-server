@@ -104,8 +104,8 @@
 - name: Install tfenv
   tags:
     - tfenv
+  state: absent
   ansible.builtin.git:
-    state: absent
     repo: https://github.com/tfutils/tfenv.git
     depth: 1
     dest: $HOME/.tfenv

@@ -1,5 +1,5 @@
 ---
-name: AWS-CDK
+name: Ansible
 on: # yamllint disable-line rule:truthy
   push:
     branches:
