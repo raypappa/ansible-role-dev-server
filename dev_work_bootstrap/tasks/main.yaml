@@ -559,12 +559,11 @@
   tags:
     - python
   ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
-- name: Install nvshim via uvx
-  tags:
-    - nvshim
-  ansible.builtin.shell:
-    cmd: uv tool install --from git+https://github.com/iamogbz/nvshim.git nvshim
-    creates: $HOME/.local/bin/nvshim
+- name: Install zsh-nvm
+  ansible.builtin.git:
+    repo: https://github.com/lukechilds/zsh-nvm.git
+    dest: $HOME/.zsh-nvm
+  tags: zsh-nvm
 - name: Setup nvm
   tags:
     - nvm
