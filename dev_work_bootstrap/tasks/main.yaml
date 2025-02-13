@@ -580,10 +580,6 @@
     repo: https://github.com/lukechilds/zsh-nvm.git
     dest: $HOME/.zsh-nvm
   tags: zsh-nvm
-- name: Setup nvm
-  tags:
-    - nvm
-  ansible.builtin.shell: nvm install --lts --latest-npm -b --no-progress --default
 - name: Install Rust
   tags:
     - rust
@@ -675,6 +671,14 @@
   loop:
     - mdformat
     - pre-commit
+- name: Setup nvm
+  tags:
+    - nvm
+  ansible.builtin.shell: '. {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install --lts --latest-npm -b --no-progress --default'
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
+    chdir: "{{ ansible_env.HOME }}"
+    executable: /bin/bash
 - name: Install npm modules and symlink
   tags:
     - npm
