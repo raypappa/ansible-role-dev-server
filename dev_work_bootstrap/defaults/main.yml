@@ -9,3 +9,79 @@ lazydocker:
   Linux:
     x86_64: x86_64
     aarch64: arm64
+
+tflint:
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+terraform_docs:
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+# No darwin because it's only offered in dmg
+aws_vault:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+kubectl:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+fzf:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+gh:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+task:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+k9s:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+kustomize:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+yq:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64
+chart_testing:
+  Linux:
+    x86_64: amd64
+    aarch64: arm64
+  Darwin:
+    x86_64: amd64
+    arm64: arm64

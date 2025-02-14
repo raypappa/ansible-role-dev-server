@@ -146,18 +146,6 @@
 #     curl -L -s https://github.com/alacritty/alacritty/releases/latest/download/alacritty.info | sudo tic -xe alacritty,alacritty-direct -
 #   tags:
 #     - alacritty
-- name: Architecture mapping x86_64
-  ansible.builtin.set_fact:
-    dev_server_ansible_architecture: "amd64"
-  when: ansible_architecture == "x86_64"
-  tags:
-    - always
-- name: Architecture mapping arm64
-  ansible.builtin.set_fact:
-    dev_server_ansible_architecture: "arm64"
-  when: ansible_architecture == "arm64"
-  tags:
-    - always
 - name: Install OS Specific packages
   ansible.builtin.include_tasks: "{{ ansible_os_family | lower }}.yaml"
 - name: WSL
@@ -191,7 +179,8 @@
   tags:
     - tflint
   ansible.builtin.unarchive:
-    src: "https://github.com/terraform-linters/tflint/releases/latest/download/tflint_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.zip"
+    src: "https://github.com/terraform-linters/tflint/releases/latest/download/\
+      tflint_{{ ansible_system | lower }}_{{ tflint[ansible_system][ansible_architecture] }}.zip"
     include:
       - tflint
     dest: $HOME/.local/bin
@@ -263,7 +252,7 @@
         src: "https://github.com/terraform-docs/terraform-docs/releases/download/\
           {{ terraform_docs_latest.json.tag_name }}/\
           terraform-docs-{{ terraform_docs_latest.json.tag_name }}-{{ ansible_system | lower }}-\
-          {{ dev_server_ansible_architecture }}.tar.gz"
+          {{ terraform_docs[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/bin
         keep_newer: true
         include:
@@ -373,10 +362,17 @@
 - name: Install aws-vault
   tags:
     - aws-vault
-  ansible.builtin.get_url:
-    url: https://github.com/99designs/aws-vault/releases/latest/download/aws-vault-{{ ansible_system | lower }}-{{ dev_server_ansible_architecture }}
-    dest: $HOME/.local/bin/aws-vault
-    mode: "0755"
+  block:
+    - name: Install aws-vault on Darwin
+      when: ansible_system == "Darwin"
+      community.general.homebrew:
+        name: aws-vault
+    - name: Install aws-vault on linux
+      when: ansible_system == "Linux"
+      ansible.builtin.get_url:
+        url: https://github.com/99designs/aws-vault/releases/latest/download/aws-vault-{{ ansible_system | lower }}-{{ aws_vault[ansible_system][ansible_architecture] }}
+        dest: $HOME/.local/bin/aws-vault
+        mode: "0755"
 - name: Install kubectl
   tags:
     - kubectl
@@ -389,7 +385,8 @@
       register: kubectl_latest
     - name: Download kubectl
       ansible.builtin.get_url:
-        url: https://dl.k8s.io/release/{{ kubectl_latest.content }}/bin/{{ ansible_system | lower }}/{{ dev_server_ansible_architecture }}/kubectl
+        url: "https://dl.k8s.io/release/{{ kubectl_latest.content }}/bin/\
+          {{ ansible_system | lower }}/{{ kubectl[ansible_system][ansible_architecture] }}/kubectl"
         dest: $HOME/.local/bin/kubectl
         mode: "0755"
 - name: Install fzf
@@ -407,7 +404,7 @@
       ansible.builtin.unarchive:
         src: "https://github.com/junegunn/fzf/releases/download/\
           {{ fzf_latest.json.tag_name }}/fzf-{{ fzf_latest.json.tag_name | replace('v', '') }}-\
-          {{ ansible_system }}_{{ dev_server_ansible_architecture }}.tar.gz"
+          {{ ansible_system }}_{{ fzf[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/bin
         include:
           - fzf
@@ -534,6 +531,9 @@
   tags:
     - gh
   block:
+    - name: Set gh facts
+      ansible.builtin.set_fact:
+        gh_system: "{{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}"
     - name: Find latest version
       ansible.builtin.uri:
         url: https://github.com/cli/cli/releases/latest
@@ -545,11 +545,11 @@
       ansible.builtin.unarchive:
         src: "https://github.com/cli/cli/releases/download/\
           {{ gh_latest.json.tag_name }}/\
-          gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_\
-          {{ dev_server_ansible_architecture }}.tar.gz"
+          gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ gh_system }}_\
+          {{ gh[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/
         include:
-          - "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}/bin/gh"
+          - "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ gh_system }}_{{ gh[ansible_system][ansible_architecture] }}/bin/gh"
         keep_newer: true
         extra_opts:
           - --strip-components=1
@@ -565,7 +565,8 @@
       register: taskfile_tmp_dir
     - name: Download taskfile
       ansible.builtin.unarchive:
-        src: "https://github.com/go-task/task/releases/latest/download/task_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
+        src: "https://github.com/go-task/task/releases/latest/download/\
+          task_{{ ansible_system | lower }}_{{ task[ansible_system][ansible_architecture] }}.tar.gz"
         dest: "{{ taskfile_tmp_dir.path }}"
         mode: "0755"
         keep_newer: true
@@ -597,7 +598,8 @@
   tags:
     - k9s
   ansible.builtin.unarchive:
-    src: https://github.com/derailed/k9s/releases/latest/download/k9s_{{ ansible_system }}_{{ dev_server_ansible_architecture }}.tar.gz
+    src: "https://github.com/derailed/k9s/releases/latest/download/\
+      k9s_{{ ansible_system }}_{{ k9s[ansible_system][ansible_architecture] }}.tar.gz"
     dest: $HOME/.local/bin
     include:
       - k9s
@@ -642,7 +644,7 @@
         src: "https://github.com/kubernetes-sigs/kustomize/releases/download/\
           {{ kustomize_latest.json.tag_name }}/\
           kustomize_{{ 1 | extract(kustomize_latest.json.tag_name | split('/')) }}_\
-          {{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
+          {{ ansible_system | lower }}_{{ kustomize[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/bin
         mode: "0755"
         keep_newer: true
@@ -651,7 +653,8 @@
   tags:
     - cloudflared
   ansible.builtin.get_url:
-    url: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-{{ ansible_system | lower }}-{{ dev_server_ansible_architecture }}
+    url: "https://github.com/cloudflare/cloudflared/releases/latest/download/\
+      cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}"
     dest: $HOME/.local/bin/cloudflared
     mode: "0755"
 - name: Install komac nightly
@@ -670,7 +673,7 @@
   tags:
     - yq
   ansible.builtin.get_url:
-    url: https://github.com/mikefarah/yq/releases/latest/download/yq_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}
+    url: https://github.com/mikefarah/yq/releases/latest/download/yq_{{ ansible_system | lower }}_{{ yq[ansible_system][ansible_architecture] }}
     dest: $HOME/.local/bin/yq
     mode: "0755"
 - name: Install chart-testing
@@ -689,7 +692,7 @@
         src: "https://github.com/helm/chart-testing/releases/download/\
           {{ ct_latest.json.tag_name }}/\
           chart-testing_{{ ct_latest.json.tag_name | replace('v', '') }}_\
-          {{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
+          {{ ansible_system | lower }}_{{ chart_testing[ansible_system][ansible_architecture] }}.tar.gz"
         remote_src: true
         keep_newer: true
         mode: "0755"
