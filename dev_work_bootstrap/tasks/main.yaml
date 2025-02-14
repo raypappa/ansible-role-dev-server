@@ -217,9 +217,10 @@
     - uv
   block:
     - name: Set uv facts
-      uv_dir_name: "uv-{{ uv[ansible_system][ansible_architecture] }}-\
-        {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-        {{ '-gnu' if ansible_system == 'Linux' else '' }}"
+      ansible.builtin.set_fact:
+        uv_dir_name: "uv-{{ uv[ansible_system][ansible_architecture] }}-\
+          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+          {{ '-gnu' if ansible_system == 'Linux' else '' }}"
     - name: Install uv
       ansible.builtin.unarchive:
         src: "https://github.com/astral-sh/uv/releases/latest/download/{{ uv_dir_name }}.tar.gz"
