@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # defaults file for dev_work_bootstrap
 rustup_bin: $HOME/.cargo/bin/rustup
