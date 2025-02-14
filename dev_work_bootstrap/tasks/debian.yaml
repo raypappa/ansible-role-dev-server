@@ -2,6 +2,8 @@
 - name: Install Debian deps
   become: true
   ansible.builtin.apt:
+    update_cache: true
+    upgrade: "safe"
     name:
       - python3-apt
       - tmux
