@@ -9,14 +9,16 @@ on: # yamllint disable-line rule:truthy
       - main
 jobs:
   # TODO(raypappa): failing until i get community.general installed
-  # check:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 2
-  #     - name: run-ansible-lint
-  #       uses: ansible/ansible-lint@v25.1.2
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: run-ansible-lint
+        uses: ansible/ansible-lint@v25.1.2
+        with:
+          requirements_file: dev_work_bootstrap/meta/main.yml
   verify-ubuntu:
     strategy:
       matrix:
@@ -39,7 +41,6 @@ jobs:
         with:
           playbook: playbook.yaml
           directory: ./
-          requirements_file: dev_work_bootstrap/meta/main.yml
   verify-macos:
     # needs: check
     strategy:

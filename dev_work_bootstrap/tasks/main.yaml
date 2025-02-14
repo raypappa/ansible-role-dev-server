@@ -146,13 +146,13 @@
 #     curl -L -s https://github.com/alacritty/alacritty/releases/latest/download/alacritty.info | sudo tic -xe alacritty,alacritty-direct -
 #   tags:
 #     - alacritty
-- name: Architecture mapping
+- name: Architecture mapping x86_64
   ansible.builtin.set_fact:
     dev_server_ansible_architecture: "amd64"
   when: ansible_architecture == "x86_64"
   tags:
     - always
-- name: Architecture mapping
+- name: Architecture mapping arm64
   ansible.builtin.set_fact:
     dev_server_ansible_architecture: "arm64"
   when: ansible_architecture == "arm64"
