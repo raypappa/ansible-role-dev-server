@@ -450,7 +450,7 @@
       register: ripgrep_latest
     - name: Set ripgrep facts
       ansible.builtin.set_fact:
-        ripgrep_dir: "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ansible_architecture }}-\
+        ripgrep_dir: "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ripgrep[ansible_system][ansible_architecture] }}-\
             {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
             {{ '-musl' if ansible_system == 'Linux' else '' }}"
     - name: Install ripgrep
