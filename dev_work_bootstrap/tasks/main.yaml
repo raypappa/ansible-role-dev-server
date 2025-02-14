@@ -416,6 +416,9 @@
   tags:
     - neovim
   block:
+    - name: Set neovim facts
+      ansible.builtin.set_fact:
+        neovim_system: "{{ 'macos' if ansible_system == 'Darwin' else ansible_system | lower }}"
     - name: Create temp directory for neovim
       ansible.builtin.file:
         path: $HOME/.local/nvim
@@ -424,7 +427,7 @@
     - name: Download neovim
       ansible.builtin.unarchive:
         # ansible_system might be macos not Darwin.
-        src: https://github.com/neovim/neovim/releases/latest/download/nvim-{{ ansible_system | lower }}-{{ ansible_architecture }}.tar.gz
+        src: https://github.com/neovim/neovim/releases/latest/download/nvim-{{ neovim_system }}-{{ neovim[ansible_system][ansible_architecture] }}.tar.gz
         remote_src: true
         keep_newer: true
         mode: "0755"
