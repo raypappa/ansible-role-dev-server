@@ -19,7 +19,7 @@ jobs:
         uses: ansible/ansible-lint@v25.1.2
         with:
           requirements_file: dev_work_bootstrap/meta/requirements.yml
-  verify-ubuntu:
+  verify_ubuntu:
     strategy:
       matrix:
         os:
@@ -41,7 +41,7 @@ jobs:
         with:
           playbook: playbook.yaml
           directory: ./
-  verify-macos:
+  verify_macos:
     # needs: check
     strategy:
       matrix:
