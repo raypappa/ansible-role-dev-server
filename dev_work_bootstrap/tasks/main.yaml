@@ -231,7 +231,8 @@
     - uv
   ansible.builtin.unarchive:
     src: "https://github.com/astral-sh/uv/releases/latest/download\
-      /uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}\
+      /uv-{{ ansible_architecture }}-{{'apple' if ansible_system == 'Darwin' else 'unknown'}}-\
+      {{ ansible_system | lower }}\
       {{'-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
     remote_src: true
     keep_newer: true
@@ -239,9 +240,11 @@
     dest: $HOME/.local/bin
     creates: $HOME/.local/bin/uvx
     include:
-      - "uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}\
+      - "uv-{{ ansible_architecture }}-{{'apple' if ansible_system == 'Darwin' else 'unknown'}}-\
+        {{ ansible_system | lower }}\
         {{'-gnu' if ansible_system == 'Linux' else '' }}/uv"
-      - "uv-{{ ansible_architecture }}-unknown-{{ ansible_system | lower }}\
+      - "uv-{{ ansible_architecture }}-{{'apple' if ansible_system == 'Darwin' else 'unknown'}}-\
+        {{ ansible_system | lower }}\
         {{'-gnu' if ansible_system == 'Linux' else '' }}/uvx"
     extra_opts:
       - --strip-components=1
