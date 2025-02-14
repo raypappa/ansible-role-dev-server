@@ -177,12 +177,6 @@
       register: lazydocker_latest
     - name: "Extract lazydocker"
       ansible.builtin.unarchive:
-        #  https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_aarch64.tar.gz
-
-        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Darwin_arm64.tar.gz
-        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Darwin_x86_64.tar.gz
-        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_arm64.tar.gz
-        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_x86_64.tar.gz
         src: "https://github.com/jesseduffield/lazydocker/releases/download/\
           {{ lazydocker_latest.json.tag_name }}/\
           lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
@@ -315,10 +309,11 @@
     - name: "Download vale"
       ansible.builtin.unarchive:
         # https://github.com/errata-ai/vale/releases/download/v3.9.5/vale_3.9.5_Darwin_arm64.tar.gz
+        # https://github.com/errata-ai/vale/releases/download/v3.9.5/vale_3.9.5_Darwin_arm64.tar.gz
         src: "https://github.com/errata-ai/vale/releases/download/\
           {{ vale_latest.json.tag_name }}/\
           vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
-          {{ ansible_system }}_{{ vale_arch }}.tar.gz"
+          {{ vale_system }}_{{ vale_arch }}.tar.gz"
         dest: $HOME/.local/bin
         include:
           - vale
