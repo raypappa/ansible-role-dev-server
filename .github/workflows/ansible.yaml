@@ -33,6 +33,8 @@ jobs:
           fetch-depth: 2
       - name: Setup Ansible
         uses: alex-oleshkevich/setup-ansible@v1.0.1
+        with:
+          ansible-version: latest
       - name: Add pyenv to path
         run: |
           echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
