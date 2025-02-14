@@ -2,3 +2,10 @@
 ---
 # defaults file for dev_work_bootstrap
 rustup_bin: $HOME/.cargo/bin/rustup
+lazydocker:
+  Darwin:
+    x86_64: x86_64
+    arm64: arm64
+  Linux:
+    x86_64: x86_64
+    aarch64: arm64

@@ -177,10 +177,16 @@
       register: lazydocker_latest
     - name: "Extract lazydocker"
       ansible.builtin.unarchive:
+        #  https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_aarch64.tar.gz
+
+        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Darwin_arm64.tar.gz
+        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Darwin_x86_64.tar.gz
+        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_arm64.tar.gz
+        # https://github.com/jesseduffield/lazydocker/releases/download/v0.24.1/lazydocker_0.24.1_Linux_x86_64.tar.gz
         src: "https://github.com/jesseduffield/lazydocker/releases/download/\
           {{ lazydocker_latest.json.tag_name }}/\
           lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
-          {{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
+          {{ ansible_system }}_{{ lazydocker[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/bin
         include:
           - lazydocker
