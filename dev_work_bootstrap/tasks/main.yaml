@@ -25,11 +25,109 @@
     src: authorized_keys
     dest: $HOME/.ssh/authorized_keys
     mode: "0600"
+
 - name: Install bash-it
   ansible.builtin.git:
     dest: $HOME/.bash_it
     repo: https://github.com/Bash-it/bash-it.git
     update: true
+- name: Install nvm
+  ansible.builtin.git:
+    repo: https://github.com/nvm-sh/nvm.git
+    dest: $HOME/.nvm
+    recursive: false
+  tags:
+    - nvm
+- name: Install tfenv
+  tags:
+    - tfenv
+  # state: absent
+  ansible.builtin.git:
+    repo: https://github.com/tfutils/tfenv.git
+    depth: 1
+    dest: $HOME/.tfenv
+    update: true
+- name: Install pyenv and plugins
+  tags:
+    - pyenv
+  block:
+    - name: Install pyenv
+      tags:
+        - pyenv-app
+      ansible.builtin.git:
+        repo: https://github.com/pyenv/pyenv.git
+        dest: $HOME/.pyenv
+        force: true
+        update: true
+    - name: Install pyenv-virtualenv
+      tags:
+        - pyenv-virtualenv
+      ansible.builtin.git:
+        repo: https://github.com/pyenv/pyenv-virtualenv.git
+        dest: $HOME/.pyenv/plugins/pyenv-virtualenv
+        update: true
+    - name: Install pyenv-update
+      tags:
+        - pyenv-update
+      ansible.builtin.git:
+        repo: https://github.com/pyenv/pyenv-update.git
+        dest: $HOME/.pyenv/plugins/pyenv-update
+        update: true
+    - name: Install pyenv-doctor
+      tags:
+        - pyenv-doctor
+      ansible.builtin.git:
+        repo: https://github.com/pyenv/pyenv-doctor.git
+        dest: $HOME/.pyenv/plugins/pyenv-doctor
+        update: true
+    - name: Install pyenv-default-packages
+      tags:
+        - pyenv-default-packages
+      ansible.builtin.git:
+        repo: https://github.com/jawshooah/pyenv-default-packages.git
+        dest: $HOME/.pyenv/plugins/pyenv-default-packages
+        update: true
+- name: Install goenv
+  tags:
+    - goenv
+  ansible.builtin.git:
+    repo: https://github.com/go-nv/goenv.git
+    dest: $HOME/.goenv
+    update: true
+- name: Install rbenv
+  tags:
+    - rbenv
+  ansible.builtin.git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: $HOME/.rbenv
+    update: true
+- name: Install spaceship
+  tags:
+    - spaceship
+  block:
+    - name: Create .zsh directory
+      ansible.builtin.file:
+        path: $HOME/.zsh
+        state: directory
+    - name: Clone spaceship
+      ansible.builtin.git:
+        repo: https://github.com/spaceship-prompt/spaceship-prompt.git
+        depth: 1
+        dest: "$HOME/.zsh/spaceship"
+        recursive: false
+- name: git-plugins
+  tags:
+    - git-plugins
+  ansible.builtin.git:
+    repo: https://github.com/afeld/git-plugins.git
+    dest: $HOME/.git-plugins
+    update: true
+- name: Install zsh-nvm
+  ansible.builtin.git:
+    repo: https://github.com/lukechilds/zsh-nvm.git
+    dest: $HOME/.zsh-nvm
+  tags: zsh-nvm
+
 - name: tmux completions
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/master/completions/tmux
@@ -64,13 +162,7 @@
 - name: WSL
   when: '"microsoft" in ansible_facts["kernel"]'
   ansible.builtin.include_tasks: wsl.yaml
-- name: Install nvm
-  ansible.builtin.git:
-    repo: https://github.com/nvm-sh/nvm.git
-    dest: $HOME/.nvm
-    recursive: false
-  tags:
-    - nvm
+
 - name: Install lazydocker
   tags:
     - lazydocker
@@ -107,15 +199,6 @@
     mode: "0755"
     keep_newer: true
     remote_src: true
-- name: Install tfenv
-  tags:
-    - tfenv
-  # state: absent
-  ansible.builtin.git:
-    repo: https://github.com/tfutils/tfenv.git
-    depth: 1
-    dest: $HOME/.tfenv
-    update: true
 - name: Install tenv
   tags:
     - tenv
@@ -162,7 +245,6 @@
         {{'-gnu' if ansible_system == 'Linux' else '' }}/uvx"
     extra_opts:
       - --strip-components=1
-
 - name: Install terraform-docs
   tags:
     - terraform-docs
@@ -185,46 +267,6 @@
         include:
           - terraform-docs
         remote_src: true
-- name: Install pyenv and plugins
-  tags:
-    - pyenv
-  block:
-    - name: Install pyenv
-      tags:
-        - pyenv-app
-      ansible.builtin.git:
-        repo: https://github.com/pyenv/pyenv.git
-        dest: $HOME/.pyenv
-        force: true
-        update: true
-    - name: Install pyenv-virtualenv
-      tags:
-        - pyenv-virtualenv
-      ansible.builtin.git:
-        repo: https://github.com/pyenv/pyenv-virtualenv.git
-        dest: $HOME/.pyenv/plugins/pyenv-virtualenv
-        update: true
-    - name: Install pyenv-update
-      tags:
-        - pyenv-update
-      ansible.builtin.git:
-        repo: https://github.com/pyenv/pyenv-update.git
-        dest: $HOME/.pyenv/plugins/pyenv-update
-        update: true
-    - name: Install pyenv-doctor
-      tags:
-        - pyenv-doctor
-      ansible.builtin.git:
-        repo: https://github.com/pyenv/pyenv-doctor.git
-        dest: $HOME/.pyenv/plugins/pyenv-doctor
-        update: true
-    - name: Install pyenv-default-packages
-      tags:
-        - pyenv-default-packages
-      ansible.builtin.git:
-        repo: https://github.com/jawshooah/pyenv-default-packages.git
-        dest: $HOME/.pyenv/plugins/pyenv-default-packages
-        update: true
 - name: Install glow
   tags:
     - glow
@@ -468,20 +510,6 @@
   ansible.builtin.get_url:
     url: https://github.com/pnpm/pnpm/releases/latest/download/pnpm-{{ ansible_system | lower }}-{{ "arm64" if ansible_architecture == "amd64" else "x64" }}
     dest: $HOME/.local/bin/pnpm
-- name: Install goenv
-  tags:
-    - goenv
-  ansible.builtin.git:
-    repo: https://github.com/go-nv/goenv.git
-    dest: $HOME/.goenv
-    update: true
-- name: Install rbenv
-  tags:
-    - rbenv
-  ansible.builtin.git:
-    repo: https://github.com/rbenv/rbenv.git
-    dest: $HOME/.rbenv
-    update: true
 - name: Install Github CLI
   tags:
     - gh
@@ -504,20 +532,6 @@
           - --strip-components=1
         remote_src: true
         mode: "0755"
-- name: Install spaceship
-  tags:
-    - spaceship
-  block:
-    - name: Create .zsh directory
-      ansible.builtin.file:
-        path: $HOME/.zsh
-        state: directory
-    - name: Clone spaceship
-      ansible.builtin.git:
-        repo: https://github.com/spaceship-prompt/spaceship-prompt.git
-        depth: 1
-        dest: "$HOME/.zsh/spaceship"
-        recursive: false
 - name: Install taskfile
   tags:
     - taskfile
@@ -550,13 +564,6 @@
         #     src: "{{ taskfile_tmp_dir.path }}/completion/zsh/_task"
         #     dest: $HOME/.local/share/zsh/site-functions/_task
         #     mode: "0755"
-- name: git-plugins
-  tags:
-    - git-plugins
-  ansible.builtin.git:
-    repo: https://github.com/afeld/git-plugins.git
-    dest: $HOME/.git-plugins
-    update: true
 - name: git-checkout-branch
   tags:
     - git-checkout-branch
@@ -575,11 +582,6 @@
     keep_newer: true
     remote_src: true
     mode: "0755"
-- name: Install zsh-nvm
-  ansible.builtin.git:
-    repo: https://github.com/lukechilds/zsh-nvm.git
-    dest: $HOME/.zsh-nvm
-  tags: zsh-nvm
 - name: Install Rust
   tags:
     - rust
@@ -679,38 +681,39 @@
     creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
     chdir: "{{ ansible_env.HOME }}"
     executable: /bin/bash
-- name: Install npm modules and symlink
-  tags:
-    - npm
-  block: 
-    - name: Set npm packages to install globally
-      ansible.builtin.set_fact:
-        npm_packages:
-        - jsonlint
-        - yaml-language-server
-        - cspell
-        - aws-azure-login
-        - markdown-toc
-    - name: Install npm modules
-      community.general.npm:
-        global: true
-        name: "{{ item }}"
-      loop: "{{ npm_packages }}"
-    - name: Symlink to global
-      ansible.builtin.file:
-        src: $NVM_BIN/{{ item }}
-        dest: $HOME/.local/bin/{{ item }}
-        state: link
-      loop: "{{ npm_packages }}"
-- name: Determine latest version of python
-  tags:
-    - python
-  ansible.builtin.shell: pyenv latest -k 3
-  register: latest_python
-- name: Install latest version of python
+# TODO(raypappa): NVM_BIN won't be present on first run because nvm isn't loaded in the shell.
+# - name: Install npm modules and symlink
+#   tags:
+#     - npm
+#   block: 
+#     - name: Set npm packages to install globally
+#       ansible.builtin.set_fact:
+#         npm_packages:
+#         - jsonlint
+#         - yaml-language-server
+#         - cspell
+#         - aws-azure-login
+#         - markdown-toc
+#     - name: Install npm modules
+#       community.general.npm:
+#         global: true
+#         name: "{{ item }}"
+#       loop: "{{ npm_packages }}"
+#     - name: Symlink to global
+#       ansible.builtin.file:
+#         src: $NVM_BIN/{{ item }}
+#         dest: $HOME/.local/bin/{{ item }}
+#         state: link
+#       loop: "{{ npm_packages }}"
+- name: Setup latest python version with pyenv
   tags:
     - python
-  ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
+  block:
+    - name: Determine latest version of python
+      ansible.builtin.shell: pyenv latest -k 3
+      register: latest_python
+    - name: Install latest version of python
+      ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
 - name: Install latest version of go
   tags:
     - go
