@@ -127,3 +127,10 @@ ripgrep:
   Darwin:
     x86_64: x86_64
     arm64: aarch64
+fd:
+  Linux:
+    x86_64: x86_64
+    aarch64: aarch64
+  Darwin:
+    x86_64: x86_64
+    arm64: aarch64

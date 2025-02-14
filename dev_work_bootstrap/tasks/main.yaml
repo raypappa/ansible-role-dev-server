@@ -480,21 +480,18 @@
           Accept: application/json
         status_code: 200
       register: fd_latest
+    - name: Set fd facts
+      ansible.builtin.set_fact:
+        fd_dir_name: "fd-{{ fd_latest.json.tag_name }}-{{ fd[ansible_system][ansible_architecture] }}-\
+          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+          {{ '-gnu' if ansible_system == 'Linux' else '' }}"
     - name: Install fd
       ansible.builtin.unarchive:
-        # fd-v10.2.0-aarch64-apple-darwin.tar.gz
-        # fd-v10.2.0-aarch64-unknown-linux-gnu.tar.gz
-        # fd-v10.2.0-x86_64-apple-darwin.tar.gz
-        # fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz
         src: "https://github.com/sharkdp/fd/releases/download/\
-          {{ fd_latest.json.tag_name }}/fd-{{ fd_latest.json.tag_name }}-{{ ansible_architecture }}-\
-          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-          {{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
+          {{ fd_latest.json.tag_name }}/{{ fd_dir_name }}.tar.gz"
         dest: $HOME/.local/bin
         include:
-          - "fd-{{ fd_latest.json.tag_name }}-{{ ansible_architecture }}-\
-            {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-            {{ '-gnu' if ansible_system == 'Linux' else '' }}/fd"
+          - "{{ fd_dir_name }}/fd"
         keep_newer: true
         remote_src: true
         mode: "0755"
