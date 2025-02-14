@@ -295,9 +295,10 @@
   tags:
     - vale
   block:
-    - name: Set Vale arch
+    - name: Set Vale arch and system
       ansible.builtin.set_fact:
         vale_arch: "{{ '64-bit' if ansible_architecture == 'x86_64' else 'arm64' }}"
+        vale_system: "{{ 'macOS' if ansible_system == 'Darwin' else ansible_system }}"
     - name: "Find latest vale version"
       ansible.builtin.uri:
         url: https://github.com/errata-ai/vale/releases/latest
@@ -307,6 +308,7 @@
       register: vale_latest
     - name: "Download vale"
       ansible.builtin.unarchive:
+        # https://github.com/errata-ai/vale/releases/download/v3.9.5/vale_3.9.5_Darwin_arm64.tar.gz
         src: "https://github.com/errata-ai/vale/releases/download/\
           {{ vale_latest.json.tag_name }}/\
           vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
