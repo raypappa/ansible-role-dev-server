@@ -38,6 +38,7 @@ jobs:
         with:
           playbook: playbook.yaml
           directory: ./
+          requirements_file: dev_work_bootstrap/meta/main.yml
   verify-macos:
     needs: check
     strategy:
