@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 ---
 # tasks file for dev_work_bootstrap
-- name: Clone dotfiles
+- name: Clone dotfiles # noqa: latest[git]
   ansible.builtin.git:
     dest: $HOME/.cfg
     repo: https://github.com/raypappa/dotfiles.git
@@ -26,19 +26,19 @@
     dest: $HOME/.ssh/authorized_keys
     mode: "0600"
 
-- name: Install bash-it
+- name: Install bash-it # noqa: latest[git]
   ansible.builtin.git:
     dest: $HOME/.bash_it
     repo: https://github.com/Bash-it/bash-it.git
     update: true
-- name: Install nvm
+- name: Install nvm # noqa: latest[git]
   ansible.builtin.git:
     repo: https://github.com/nvm-sh/nvm.git
     dest: $HOME/.nvm
     recursive: false
   tags:
     - nvm
-- name: Install tfenv
+- name: Install tfenv # noqa: latest[git]
   tags:
     - tfenv
   # state: absent
@@ -51,7 +51,7 @@
   tags:
     - pyenv
   block:
-    - name: Install pyenv
+    - name: Install pyenv # noqa: latest[git]
       tags:
         - pyenv-app
       ansible.builtin.git:
@@ -59,42 +59,42 @@
         dest: $HOME/.pyenv
         force: true
         update: true
-    - name: Install pyenv-virtualenv
+    - name: Install pyenv-virtualenv # noqa: latest[git]
       tags:
         - pyenv-virtualenv
       ansible.builtin.git:
         repo: https://github.com/pyenv/pyenv-virtualenv.git
         dest: $HOME/.pyenv/plugins/pyenv-virtualenv
         update: true
-    - name: Install pyenv-update
+    - name: Install pyenv-update # noqa: latest[git]
       tags:
         - pyenv-update
       ansible.builtin.git:
         repo: https://github.com/pyenv/pyenv-update.git
         dest: $HOME/.pyenv/plugins/pyenv-update
         update: true
-    - name: Install pyenv-doctor
+    - name: Install pyenv-doctor # noqa: latest[git]
       tags:
         - pyenv-doctor
       ansible.builtin.git:
         repo: https://github.com/pyenv/pyenv-doctor.git
         dest: $HOME/.pyenv/plugins/pyenv-doctor
         update: true
-    - name: Install pyenv-default-packages
+    - name: Install pyenv-default-packages # noqa: latest[git]
       tags:
         - pyenv-default-packages
       ansible.builtin.git:
         repo: https://github.com/jawshooah/pyenv-default-packages.git
         dest: $HOME/.pyenv/plugins/pyenv-default-packages
         update: true
-- name: Install goenv
+- name: Install goenv # noqa: latest[git]
   tags:
     - goenv
   ansible.builtin.git:
     repo: https://github.com/go-nv/goenv.git
     dest: $HOME/.goenv
     update: true
-- name: Install rbenv
+- name: Install rbenv # noqa: latest[git]
   tags:
     - rbenv
   ansible.builtin.git:
@@ -109,26 +109,27 @@
       ansible.builtin.file:
         path: $HOME/.zsh
         state: directory
-    - name: Clone spaceship
+        mode: "0755"
+    - name: Clone spaceship # noqa: latest[git]
       ansible.builtin.git:
         repo: https://github.com/spaceship-prompt/spaceship-prompt.git
         depth: 1
         dest: "$HOME/.zsh/spaceship"
         recursive: false
-- name: git-plugins
+- name: Git-plugins # noqa: latest[git]
   tags:
     - git-plugins
   ansible.builtin.git:
     repo: https://github.com/afeld/git-plugins.git
     dest: $HOME/.git-plugins
     update: true
-- name: Install zsh-nvm
+- name: Install zsh-nvm # noqa: latest[git]
   ansible.builtin.git:
     repo: https://github.com/lukechilds/zsh-nvm.git
     dest: $HOME/.zsh-nvm
   tags: zsh-nvm
 
-- name: tmux completions
+- name: Tmux completions
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/master/completions/tmux
     dest: $HOME/.local/share/bash-completion/tmux.bash
@@ -176,9 +177,9 @@
       register: lazydocker_latest
     - name: "Extract lazydocker"
       ansible.builtin.unarchive:
-        src: "https://github.com/jesseduffield/lazydocker/releases/download\
-          /{{ lazydocker_latest.json.tag_name }}\
-          /lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
+        src: "https://github.com/jesseduffield/lazydocker/releases/download/\
+          {{ lazydocker_latest.json.tag_name }}/\
+          lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
           {{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         include:
@@ -190,9 +191,7 @@
   tags:
     - tflint
   ansible.builtin.unarchive:
-    src: "https://github.com/terraform-linters/tflint\
-      /releases/latest/download/\
-      tflint_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.zip"
+    src: "https://github.com/terraform-linters/tflint/releases/latest/download/tflint_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.zip"
     include:
       - tflint
     dest: $HOME/.local/bin
@@ -212,11 +211,9 @@
       register: tenv_latest
     - name: "Download tenv"
       ansible.builtin.unarchive:
-        # https://github.com/tofuutils/tenv/releases/download/v4.2.4/tenv_v4.2.4_Linux_x86_64.tar.gz
-        src: "https://github.com/tofuutils/tenv/releases/download\
-          /{{ tenv_latest.json.tag_name }}\
-          /tenv_{{ tenv_latest.json.tag_name }}_{{ ansible_system }}_\
-          {{ ansible_architecture }}.tar.gz"
+        src: "https://github.com/tofuutils/tenv/releases/download/\
+          {{ tenv_latest.json.tag_name }}/\
+          tenv_{{ tenv_latest.json.tag_name }}_{{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         keep_newer: true
         include:
@@ -230,22 +227,21 @@
   tags:
     - uv
   ansible.builtin.unarchive:
-    src: "https://github.com/astral-sh/uv/releases/latest/download\
-      /uv-{{ ansible_architecture }}-{{'apple' if ansible_system == 'Darwin' else 'unknown'}}-\
-      {{ ansible_system | lower }}\
-      {{'-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
+    src: "https://github.com/astral-sh/uv/releases/latest/download/\
+      uv-{{ ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
+      {{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
     remote_src: true
     keep_newer: true
     mode: "0755"
     dest: $HOME/.local/bin
     creates: $HOME/.local/bin/uvx
     include:
-      - "uv-{{ ansible_architecture }}-{{'apple' if ansible_system == 'Darwin' else 'unknown'}}-\
-        {{ ansible_system | lower }}\
-        {{'-gnu' if ansible_system == 'Linux' else '' }}/uv"
-      - "uv-{{ ansible_architecture }}-{{'apple' if ansible_system == 'Darwin' else 'unknown'}}-\
-        {{ ansible_system | lower }}\
-        {{'-gnu' if ansible_system == 'Linux' else '' }}/uvx"
+      - "uv-{{ ansible_architecture }}-\
+        {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+        {{ '-gnu' if ansible_system == 'Linux' else '' }}/uv"
+      - "uv-{{ ansible_architecture }}-\
+        {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+        {{ '-gnu' if ansible_system == 'Linux' else '' }}/uvx"
     extra_opts:
       - --strip-components=1
 - name: Install terraform-docs
@@ -263,8 +259,8 @@
       ansible.builtin.unarchive:
         src: "https://github.com/terraform-docs/terraform-docs/releases/download/\
           {{ terraform_docs_latest.json.tag_name }}/\
-          terraform-docs-{{ terraform_docs_latest.json.tag_name }}-\
-          {{ ansible_system | lower }}-{{ dev_server_ansible_architecture }}.tar.gz"
+          terraform-docs-{{ terraform_docs_latest.json.tag_name }}-{{ ansible_system | lower }}-\
+          {{ dev_server_ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         keep_newer: true
         include:
@@ -283,9 +279,8 @@
       register: glow_latest
     - name: "Download glow"
       ansible.builtin.unarchive:
-        src: "https://github.com/charmbracelet/glow/releases/download\
-          /{{ glow_latest.json.tag_name }}/\
-          glow_{{ glow_latest.json.tag_name | replace('v', '') }}_\
+        src: "https://github.com/charmbracelet/glow/releases/download/\
+          {{ glow_latest.json.tag_name }}/glow_{{ glow_latest.json.tag_name | replace('v', '') }}_\
           {{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         extra_opts:
@@ -309,9 +304,9 @@
       register: vale_latest
     - name: "Download vale"
       ansible.builtin.unarchive:
-        src: "https://github.com/errata-ai/vale/releases/download\
-          /{{ vale_latest.json.tag_name }}\
-          /vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
+        src: "https://github.com/errata-ai/vale/releases/download/\
+          {{ vale_latest.json.tag_name }}/\
+          vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
           {{ ansible_system }}_{{ vale_arch }}.tar.gz"
         dest: $HOME/.local/bin
         include:
@@ -338,7 +333,7 @@
         creates: "{{ aws_cli_tmp_dir.path }}/aws/install"
         mode: "0755"
     - name: Run the installer
-      command:
+      ansible.builtin.command:
       args:
         cmd: "{{ aws_cli_tmp_dir.path }}/aws/install --bin-dir $HOME/.local/bin --install-dir $HOME/.local/opt/aws-cli"
         creates: $HOME/.local/bin/aws
@@ -404,7 +399,9 @@
       register: fzf_latest
     - name: Download fzf
       ansible.builtin.unarchive:
-        src: https://github.com/junegunn/fzf/releases/download/{{ fzf_latest.json.tag_name }}/fzf-{{ fzf_latest.json.tag_name | replace('v', '') }}-{{ ansible_system }}_{{ dev_server_ansible_architecture }}.tar.gz
+        src: "https://github.com/junegunn/fzf/releases/download/\
+          {{ fzf_latest.json.tag_name }}/fzf-{{ fzf_latest.json.tag_name | replace('v', '') }}-\
+          {{ ansible_system }}_{{ dev_server_ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         include:
           - fzf
@@ -419,6 +416,7 @@
       ansible.builtin.file:
         path: $HOME/.local/nvim
         state: directory
+        mode: "0755"
     - name: Download neovim
       ansible.builtin.unarchive:
         # ansible_system might be macos not Darwin.
@@ -451,10 +449,15 @@
         # ripgrep-14.1.1-x86_64-apple-darwin.tar.gz
         # ripgrep-14.1.1-aarch64-apple-darwin.tar.gz
         # ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz
-        src: https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name }}/ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ansible_architecture }}-{{ "apple" if ansible_system == "Darwin" else "unknown"}}-{{ ansible_system | lower }}{{ "-musl" if ansible_system == "Linux" else "" }}.tar.gz
+        src: "https://github.com/BurntSushi/ripgrep/releases/download/\
+          {{ ripgrep_latest.json.tag_name }}/ripgrep-{{ ripgrep_latest.json.tag_name }}-\
+          {{ ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
+          {{ ansible_system | lower }}{{ '-musl' if ansible_system == 'Linux' else '' }}.tar.gz"
         dest: $HOME/.local/bin
         include:
-          - ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ansible_architecture }}-{{ "apple" if ansible_system == "Darwin" else "unknown"}}-{{ ansible_system | lower }}{{ "-musl" if ansible_system == "Linux" else "" }}/rg
+          - "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ansible_architecture }}-\
+            {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+            {{ '-musl' if ansible_system == 'Linux' else '' }}/rg"
         keep_newer: true
         remote_src: true
         mode: "0755"
@@ -478,10 +481,15 @@
         # fd-v10.2.0-aarch64-unknown-linux-gnu.tar.gz
         # fd-v10.2.0-x86_64-apple-darwin.tar.gz
         # fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz
-        src: https://github.com/sharkdp/fd/releases/download/{{ fd_latest.json.tag_name }}/fd-{{ fd_latest.json.tag_name }}-{{ ansible_architecture }}-{{ "apple" if ansible_system == "Darwin" else "unknown" }}-{{ ansible_system | lower }}{{ "-gnu" if ansible_system == "Linux" else "" }}.tar.gz
+        src: "https://github.com/sharkdp/fd/releases/download/\
+          {{ fd_latest.json.tag_name }}/fd-{{ fd_latest.json.tag_name }}-{{ ansible_architecture }}-\
+          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+          {{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
         dest: $HOME/.local/bin
         include:
-          - fd-{{ fd_latest.json.tag_name }}-{{ ansible_architecture }}-{{ "apple" if ansible_system == "Darwin" else "unknown" }}-{{ ansible_system | lower }}{{ "-gnu" if ansible_system == "Linux" else "" }}/fd
+          - "fd-{{ fd_latest.json.tag_name }}-{{ ansible_architecture }}-\
+            {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+            {{ '-gnu' if ansible_system == 'Linux' else '' }}/fd"
         keep_newer: true
         remote_src: true
         mode: "0755"
@@ -499,8 +507,10 @@
     - name: Download tree-sitter
       ansible.builtin.get_url:
         # TODO(craig): check ansible_system is Darwin or MacOS
-        url: https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-{{ ansible_system }}-{{ "arm64" if ansible_architecture == "amd64" else "x64" }}.gz
+        url: "https://github.com/tree-sitter/tree-sitter/releases/latest/download/\
+          tree-sitter-{{ ansible_system }}-{{ 'arm64' if ansible_architecture == 'amd64' else 'x64' }}.gz"
         dest: "{{ tree_sitter_tmp_dir.path }}/tree-sitter.gz"
+        mode: "0644"
     - name: Install tree-sitter
       community.general.decompress:
         src: "{{ tree_sitter_tmp_dir.path }}/tree-sitter.gz"
@@ -513,6 +523,7 @@
   ansible.builtin.get_url:
     url: https://github.com/pnpm/pnpm/releases/latest/download/pnpm-{{ ansible_system | lower }}-{{ "arm64" if ansible_architecture == "amd64" else "x64" }}
     dest: $HOME/.local/bin/pnpm
+    mode: "0755"
 - name: Install Github CLI
   tags:
     - gh
@@ -526,10 +537,13 @@
       register: gh_latest
     - name: Download
       ansible.builtin.unarchive:
-        src: https://github.com/cli/cli/releases/download/{{ gh_latest.json.tag_name }}/gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz
+        src: "https://github.com/cli/cli/releases/download/\
+          {{ gh_latest.json.tag_name }}/\
+          gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_\
+          {{ dev_server_ansible_architecture }}.tar.gz"
         dest: $HOME/.local/
         include:
-          - gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}/bin/gh
+          - "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}/bin/gh"
         keep_newer: true
         extra_opts:
           - --strip-components=1
@@ -545,8 +559,7 @@
       register: taskfile_tmp_dir
     - name: Download taskfile
       ansible.builtin.unarchive:
-        src: "https://github.com/go-task/task/releases/latest/download\
-          /task_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
+        src: "https://github.com/go-task/task/releases/latest/download/task_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
         dest: "{{ taskfile_tmp_dir.path }}"
         mode: "0755"
         keep_newer: true
@@ -567,7 +580,7 @@
         #     src: "{{ taskfile_tmp_dir.path }}/completion/zsh/_task"
         #     dest: $HOME/.local/share/zsh/site-functions/_task
         #     mode: "0755"
-- name: git-checkout-branch
+- name: Git-checkout-branch
   tags:
     - git-checkout-branch
   ansible.builtin.get_url:
@@ -602,6 +615,7 @@
       ansible.builtin.get_url:
         dest: "{{ rustup_tmp.path }}/rustup-init.sh"
         url: https://sh.rustup.rs
+        mode: "0644"
     - name: Run rustup-init script
       ansible.builtin.command: "sh {{ rustup_tmp.path }}/rustup-init.sh -y --no-modify-path"
       changed_when: true
@@ -619,7 +633,10 @@
       register: kustomize_latest
     - name: Install kustomize
       ansible.builtin.unarchive:
-        src: https://github.com/kubernetes-sigs/kustomize/releases/download/{{ kustomize_latest.json.tag_name }}/kustomize_{{ 1 | extract(kustomize_latest.json.tag_name | split('/')) }}_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz
+        src: "https://github.com/kubernetes-sigs/kustomize/releases/download/\
+          {{ kustomize_latest.json.tag_name }}/\
+          kustomize_{{ 1 | extract(kustomize_latest.json.tag_name | split('/')) }}_\
+          {{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
         dest: $HOME/.local/bin
         mode: "0755"
         keep_newer: true
@@ -636,7 +653,9 @@
     - komac-nightly
     - never
   ansible.builtin.unarchive:
-    src: https://github.com/russellbanks/Komac/releases/download/nightly/komac-nightly-{{ ansible_architecture }}-{{"apple" if ansible_system == "Darwin" else "unknown" }}-{{ ansible_system | lower }}{{"-gnu" if ansible_system == "Linux" else "" }}.tar.gz
+    src: "https://github.com/russellbanks/Komac/releases/download/nightly/\
+      komac-nightly-{{ ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
+      {{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
     remote_src: true
     keep_newer: true
     mode: "0755"
@@ -661,14 +680,17 @@
       register: ct_latest
     - name: Install chart-testing
       ansible.builtin.unarchive:
-        src: https://github.com/helm/chart-testing/releases/download/{{ ct_latest.json.tag_name }}/chart-testing_{{ ct_latest.json.tag_name | replace('v', '') }}_{{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz
+        src: "https://github.com/helm/chart-testing/releases/download/\
+          {{ ct_latest.json.tag_name }}/\
+          chart-testing_{{ ct_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system | lower }}_{{ dev_server_ansible_architecture }}.tar.gz"
         remote_src: true
         keep_newer: true
         mode: "0755"
         dest: $HOME/.local/bin
         include:
           - ct
-- name: Install tools via uv
+- name: Install tools via uv # noqa: no-changed-when
   tags:
     - uv-tools
   ansible.builtin.command:
@@ -679,7 +701,7 @@
 - name: Setup nvm
   tags:
     - nvm
-  ansible.builtin.shell: '. {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install --lts --latest-npm -b --no-progress --default'
+  ansible.builtin.shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install --lts --latest-npm -b --no-progress --default"
   args:
     creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
     chdir: "{{ ansible_env.HOME }}"
@@ -712,37 +734,20 @@
   tags:
     - python
   block:
-    - name: Determine latest version of python
-      ansible.builtin.shell: pyenv latest -k 3
+    - name: Determine latest version of python # noqa: no-changed-when
+      ansible.builtin.command: pyenv latest -k 3
       register: latest_python
-    - name: Install latest version of python
-      ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
+    - name: Install latest version of python # noqa: no-changed-when
+      ansible.builtin.command: pyenv install -s {{ latest_python.stdout }}
 - name: Setup latest version of go with pyenv
   tags:
     - go
-  creates: $HOME/.goenv/versions
   block:
-    - name: Install latest version of go
+    - name: Install latest version of go # noqa: no-changed-when
       tags:
         - go
-      ansible.builtin.shell: goenv install latest -q
-    - name: Set  latest version of go as global
+      ansible.builtin.command: goenv install latest -q
+    - name: Set  latest version of go as global # noqa: no-changed-when
       tags:
         - go
-      ansible.builtin.shell: goenv global latest
-# - name: Setup ruby
-#   tags:
-#     - ruby
-#   ansible.builtin.command:
-#     cmd:
-# - name: Install gems
-#   tags:
-#     - gems
-#     - ruby
-#   loop:
-#     - mdl
-#   community.general.gem:
-#     name: "{{ item }}"
-
-# lazygit
-# https://github.com/jesseduffield/lazygit/releases/download/v0.45.2/lazygit_0.45.2_Darwin_arm64.tar.gz
+      ansible.builtin.command: goenv global latest

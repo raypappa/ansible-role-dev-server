@@ -23,8 +23,8 @@
       - tmux
       - awscli
       - aws-sam-cli
-      - docker 
-      - docker-completion 
+      - docker
+      - docker-completion
       - docker-buildx
     state: present
     update_homebrew: true
