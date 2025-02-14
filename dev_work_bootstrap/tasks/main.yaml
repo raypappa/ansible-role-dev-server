@@ -370,7 +370,8 @@
     - name: Install aws-vault on linux
       when: ansible_system == "Linux"
       ansible.builtin.get_url:
-        url: https://github.com/99designs/aws-vault/releases/latest/download/aws-vault-{{ ansible_system | lower }}-{{ aws_vault[ansible_system][ansible_architecture] }}
+        url: "https://github.com/99designs/aws-vault/releases/latest/download/\
+          aws-vault-{{ ansible_system | lower }}-{{ aws_vault[ansible_system][ansible_architecture] }}"
         dest: $HOME/.local/bin/aws-vault
         mode: "0755"
 - name: Install kubectl
