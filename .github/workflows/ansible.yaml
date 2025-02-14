@@ -18,7 +18,7 @@ jobs:
       - name: run-ansible-lint
         uses: ansible/ansible-lint@v25.1.2
         with:
-          requirements_file: dev_work_bootstrap/meta/main.yml
+          requirements_file: dev_work_bootstrap/meta/requirements.yml
   verify-ubuntu:
     strategy:
       matrix:
