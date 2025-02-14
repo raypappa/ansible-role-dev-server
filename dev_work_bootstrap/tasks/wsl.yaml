@@ -14,7 +14,7 @@
 - name: Add wsl utilities deb repo
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb https://pkg.wslutiliti.es/debian {{ansible_distribution_release}} main"
+    repo: "deb https://pkg.wslutiliti.es/debian {{ ansible_distribution_release }} main"
     state: present
     filename: wslu
     update_cache: true

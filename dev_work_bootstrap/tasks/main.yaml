@@ -688,7 +688,7 @@
 # - name: Install npm modules and symlink
 #   tags:
 #     - npm
-#   block: 
+#   block:
 #     - name: Set npm packages to install globally
 #       ansible.builtin.set_fact:
 #         npm_packages:
@@ -717,19 +717,24 @@
       register: latest_python
     - name: Install latest version of python
       ansible.builtin.shell: pyenv install -s {{ latest_python.stdout }}
-- name: Install latest version of go
+- name: Setup latest version of go with pyenv
   tags:
     - go
-  ansible.builtin.shell: goenv install latest -q
-- name: Set  latest version of go as global
-  tags:
-    - go
-  ansible.builtin.shell: goenv global latest
+  creates: $HOME/.goenv/versions
+  block:
+    - name: Install latest version of go
+      tags:
+        - go
+      ansible.builtin.shell: goenv install latest -q
+    - name: Set  latest version of go as global
+      tags:
+        - go
+      ansible.builtin.shell: goenv global latest
 # - name: Setup ruby
 #   tags:
 #     - ruby
 #   ansible.builtin.command:
-#     cmd: 
+#     cmd:
 # - name: Install gems
 #   tags:
 #     - gems
