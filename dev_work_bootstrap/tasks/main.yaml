@@ -202,7 +202,7 @@
       ansible.builtin.unarchive:
         src: "https://github.com/tofuutils/tenv/releases/download/\
           {{ tenv_latest.json.tag_name }}/\
-          tenv_{{ tenv_latest.json.tag_name }}_{{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
+          tenv_{{ tenv_latest.json.tag_name }}_{{ ansible_system }}_{{ tenv[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/bin
         keep_newer: true
         include:
@@ -212,30 +212,27 @@
           - tf
           - atmos
         remote_src: true
-- name: Set arch for uv download
-  ansible.builtin.set_fact:
-    uv_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'x86_64' }}"
 - name: Install uv
   tags:
     - uv
-  ansible.builtin.unarchive:
-    src: "https://github.com/astral-sh/uv/releases/latest/download/\
-      uv-{{ uv_arch }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
-      {{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
-    remote_src: true
-    keep_newer: true
-    mode: "0755"
-    dest: $HOME/.local/bin
-    creates: $HOME/.local/bin/uvx
-    include:
-      - "uv-{{ uv_arch }}-\
+  block:
+    - name: Set uv facts
+      uv_dir_name: "uv-{{ uv[ansible_system][ansible_architecture] }}-\
         {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-        {{ '-gnu' if ansible_system == 'Linux' else '' }}/uv"
-      - "uv-{{ uv_arch }}-\
-        {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-        {{ '-gnu' if ansible_system == 'Linux' else '' }}/uvx"
-    extra_opts:
-      - --strip-components=1
+        {{ '-gnu' if ansible_system == 'Linux' else '' }}"
+    - name: Install uv
+      ansible.builtin.unarchive:
+        src: "https://github.com/astral-sh/uv/releases/latest/download/{{ uv_dir_name }}.tar.gz"
+        remote_src: true
+        keep_newer: true
+        mode: "0755"
+        dest: $HOME/.local/bin
+        creates: $HOME/.local/bin/uvx
+        include:
+          - "{{ uv_dir_name }}/uv"
+          - "{{ uv_dir_name }}/uvx"
+        extra_opts:
+          - --strip-components=1
 - name: Install terraform-docs
   tags:
     - terraform-docs
@@ -591,13 +588,17 @@
         #     src: "{{ taskfile_tmp_dir.path }}/completion/zsh/_task"
         #     dest: $HOME/.local/share/zsh/site-functions/_task
         #     mode: "0755"
-- name: Git-checkout-branch
+- name: Install git-checkout-branch
   tags:
     - git-checkout-branch
-  ansible.builtin.get_url:
-    url: https://github.com/royeo/git-checkout-branch/releases/latest/download/git-checkout-branch-{{ ansible_system }}-{{ ansible_architecture }}
-    dest: $HOME/.local/bin/git-checkout-branch
-    mode: "0755"
+  block:
+    - name: Install git-checkout-branch on amd64
+      when: ansible_architecture == "amd64"
+      ansible.builtin.get_url:
+        url: https://github.com/royeo/git-checkout-branch/releases/latest/download/git-checkout-branch-{{ ansible_system }}-{{ ansible_architecture }}
+        dest: $HOME/.local/bin/git-checkout-branch
+        mode: "0755"
+    # TODO(raypappa): go install github.com/royeo/git-checkout-branch@latest for arm64
 - name: Install k9s
   tags:
     - k9s
@@ -703,6 +704,27 @@
         dest: $HOME/.local/bin
         include:
           - ct
+- name: Install rain
+  block:
+    - name: Find latest version of rain
+      ansible.builtin.uri:
+        url: https://github.com/aws-cloudformation/rain/releases/latest
+        headers:
+          Accept: application/json
+        status_code: 200
+      register: rain_latest
+    - name: Set rain facts
+      ansible.builtin.set_fact:
+        rain_dir_name: rain-{{ rain_latest.json.tag_name }}_{{ ansible_system | lower }}-{{ rain[ansible_system][ansible_architecture] }}
+    - name: Install rain
+      ansible.builtin.unarchive:
+        src: "https://github.com/aws-cloudformation/rain/releases/download/{{ rain_latest.json.tag_name }}/{{ rain_dir_name }}.zip"
+        dest: $HOME/.local/bin
+        include:
+          - "{{ rain_dir_name }}/rain"
+        keep_newer: true
+        remote_src: true
+        mode: "0755"
 - name: Install tools via uv # noqa: no-changed-when
   tags:
     - uv-tools
