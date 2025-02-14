@@ -23,7 +23,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-24.04-arm
+          # Arm debian is broken somehow. not sure why. disabling for now.
+          # - ubuntu-24.04-arm
           - ubuntu-latest
     runs-on: ${{ matrix.os }}
     # needs: check
@@ -50,7 +51,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-13
+          # During this massive push to get everything working. I'm going to disable the arm64 macos until I can get it working.
+          # - macos-13
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:

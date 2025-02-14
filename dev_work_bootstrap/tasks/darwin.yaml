@@ -28,6 +28,7 @@
       - docker-buildx
     state: present
     update_homebrew: true
+    force_formula: true
 - name: Install homebrew casks
   community.general.homebrew_cask:
     name:
