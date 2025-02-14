@@ -108,11 +108,11 @@ tenv:
     arm64: arm64
 uv:
   Linux:
-    x86_64: amd64
-    aarch64: arm64
+    x86_64: x86_64
+    aarch64: aarch64
   Darwin:
-    x86_64: amd64
-    arm64: arm64
+    x86_64: x86_64
+    arm64: aarch64
 rain:
   Linux:
     x86_64: amd64
