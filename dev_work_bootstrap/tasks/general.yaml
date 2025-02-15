@@ -1,4 +1,14 @@
 ---
+- name: Ensure core directories exists
+  loop:
+    - $HOME/.local
+    - $HOME/.local/bin
+    - $HOME/.local/share
+    - $HOME/.local/share/bash-completion
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
 - name: Install uv
   tags:
     - uv
