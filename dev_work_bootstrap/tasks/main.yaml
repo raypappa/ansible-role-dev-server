@@ -56,15 +56,6 @@
     recursive: false
   tags:
     - nvm
-- name: Install tfenv # noqa: latest[git]
-  tags:
-    - tfenv
-  # state: absent
-  ansible.builtin.git:
-    repo: https://github.com/tfutils/tfenv.git
-    depth: 1
-    dest: $HOME/.tfenv
-    update: true
 - name: Install pyenv and plugins
   tags:
     - pyenv

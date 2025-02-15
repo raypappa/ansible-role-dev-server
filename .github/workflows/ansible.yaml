@@ -90,9 +90,6 @@ jobs:
           export PATH="$GOROOT/bin:$PATH"
           export PATH="$PATH:$GOPATH/bin"
           go version
-          tfenv version
-        # Because it's not installed on all hosts
-        # git-checkout-branch -a
   verify_macos:
     # needs: check
     strategy:
