@@ -1,0 +1,25 @@
+---
+- name: Install cloudflared
+  block:
+    - name: Install cloudflared for Darwin
+      when: ansible_system == "Darwin"
+      tags:
+        - cloudflared
+      ansible.builtin.unarchive:
+        url: "https://github.com/cloudflare/cloudflared/releases/download/2025.2.0/\
+          cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}.tgz"
+        dest: $HOME/.local/bin/
+        mode: "0755"
+        include:
+          - cloudflared
+        keep_newer: true
+        remote_src: true
+    - name: Install cloudflared for Linux
+      when: ansible_system == "Linux"
+      tags:
+        - cloudflared
+      ansible.builtin.get_url:
+        url: "https://github.com/cloudflare/cloudflared/releases/latest/download/\
+          cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}"
+        dest: $HOME/.local/bin/cloudflared
+        mode: "0755"

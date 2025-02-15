@@ -1,0 +1,47 @@
+---
+- name: Install Github CLI
+  tags:
+    - gh
+  block:
+    - name: Find latest version of Github CLI
+      ansible.builtin.uri:
+        url: https://github.com/cli/cli/releases/latest
+        headers:
+          Accept: application/json
+        status_code: 200
+      register: gh_latest
+    - name: Set Github CLI facts
+      ansible.builtin.set_fact:
+        gh_dir_name: "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_\
+          {{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}_\
+          {{ gh[ansible_system][ansible_architecture] }}"
+    - name: Download Linux Github CLI
+      when: ansible_system == "Linux"
+      ansible.builtin.unarchive:
+        src: "https://github.com/cli/cli/releases/download/{{ gh_latest.json.tag_name }}/{{ gh_dir_name }}.tar.gz"
+        dest: $HOME/.local/
+        include:
+          - "{{ gh_dir_name }}/bin/gh"
+        keep_newer: true
+        extra_opts:
+          - --strip-components=1
+        remote_src: true
+        mode: "0755"
+    - name: Create tmp dir for github cli
+      ansible.builtin.tempfile:
+        state: directory
+      register: gh_tmp_dir
+      when: ansible_system == "Darwin"
+    - name: Download Darwin Github CLI
+      when: ansible_system == "Darwin"
+      ansible.builtin.unarchive:
+        src: "https://github.com/cli/cli/releases/download/{{ gh_latest.json.tag_name }}/{{ gh_dir_name }}.zip"
+        dest: "{{ gh_tmp_dir.path }}"
+        keep_newer: true
+        remote_src: true
+    - name: Copy Github CLI
+      when: ansible_system == "Darwin"
+      ansible.builtin.copy:
+        src: "{{ gh_tmp_dir.path }}/{{ gh_dir_name }}/bin/gh"
+        dest: $HOME/.local/bin/
+        mode: "0755"

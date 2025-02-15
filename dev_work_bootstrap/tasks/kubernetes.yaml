@@ -1,0 +1,73 @@
+---
+- name: Install kubectl
+  tags:
+    - kubectl
+  block:
+    - name: Find latest version of kubectl
+      ansible.builtin.uri:
+        url: https://dl.k8s.io/release/stable.txt
+        status_code: 200
+        return_content: true
+      register: kubectl_latest
+    - name: Download kubectl
+      ansible.builtin.get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_latest.content }}/bin/\
+          {{ ansible_system | lower }}/{{ kubectl[ansible_system][ansible_architecture] }}/kubectl"
+        dest: $HOME/.local/bin/kubectl
+        mode: "0755"
+- name: Install k9s
+  tags:
+    - k9s
+  ansible.builtin.unarchive:
+    src: "https://github.com/derailed/k9s/releases/latest/download/\
+      k9s_{{ ansible_system }}_{{ k9s[ansible_system][ansible_architecture] }}.tar.gz"
+    dest: $HOME/.local/bin/
+    include:
+      - k9s
+    keep_newer: true
+    remote_src: true
+    mode: "0755"
+- name: Install kustomize
+  tags:
+    - kustomize
+  block:
+    - name: Find latest version of kustomize
+      ansible.builtin.uri:
+        url: https://github.com/kubernetes-sigs/kustomize/releases/latest
+        headers:
+          Accept: application/json
+        status_code: 200
+      register: kustomize_latest
+    - name: Install kustomize
+      ansible.builtin.unarchive:
+        src: "https://github.com/kubernetes-sigs/kustomize/releases/download/\
+          {{ kustomize_latest.json.tag_name }}/\
+          kustomize_{{ 1 | extract(kustomize_latest.json.tag_name | split('/')) }}_\
+          {{ ansible_system | lower }}_{{ kustomize[ansible_system][ansible_architecture] }}.tar.gz"
+        dest: $HOME/.local/bin/
+        mode: "0755"
+        keep_newer: true
+        remote_src: true
+- name: Install chart-testing
+  tags:
+    - chart-testing
+  block:
+    - name: Find latest version of chart-testing
+      ansible.builtin.uri:
+        url: https://github.com/helm/chart-testing/releases/latest
+        headers:
+          Accept: application/json
+        status_code: 200
+      register: ct_latest
+    - name: Install chart-testing
+      ansible.builtin.unarchive:
+        src: "https://github.com/helm/chart-testing/releases/download/\
+          {{ ct_latest.json.tag_name }}/\
+          chart-testing_{{ ct_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system | lower }}_{{ chart_testing[ansible_system][ansible_architecture] }}.tar.gz"
+        remote_src: true
+        keep_newer: true
+        mode: "0755"
+        dest: $HOME/.local/bin/
+        include:
+          - ct

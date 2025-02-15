@@ -1,0 +1,56 @@
+---
+- name: Install uv
+  tags:
+    - uv
+  block:
+    - name: Set uv facts
+      ansible.builtin.set_fact:
+        uv_dir_name: "uv-{{ uv[ansible_system][ansible_architecture] }}-\
+          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+          {{ '-gnu' if ansible_system == 'Linux' else '' }}"
+    - name: Install uv
+      ansible.builtin.unarchive:
+        src: "https://github.com/astral-sh/uv/releases/latest/download/{{ uv_dir_name }}.tar.gz"
+        remote_src: true
+        keep_newer: true
+        mode: "0755"
+        dest: $HOME/.local/bin/
+        creates: $HOME/.local/bin/uvx
+        include:
+          - "{{ uv_dir_name }}/uv"
+          - "{{ uv_dir_name }}/uvx"
+        extra_opts:
+          - --strip-components=1
+
+- name: Install taskfile
+  tags:
+    - taskfile
+  block:
+    - name: Create temp directory for taskfile
+      ansible.builtin.tempfile:
+        state: directory
+      register: taskfile_tmp_dir
+    - name: Download taskfile
+      ansible.builtin.unarchive:
+        src: "https://github.com/go-task/task/releases/latest/download/\
+          task_{{ ansible_system | lower }}_{{ task[ansible_system][ansible_architecture] }}.tar.gz"
+        dest: "{{ taskfile_tmp_dir.path }}"
+        mode: "0755"
+        keep_newer: true
+        remote_src: true
+    - name: Install taskfile bin
+      ansible.builtin.copy:
+        src: "{{ taskfile_tmp_dir.path }}/task"
+        dest: $HOME/.local/bin/task
+        mode: "0755"
+    - name: Install taskfile bash completion
+      ansible.builtin.copy:
+        src: "{{ taskfile_tmp_dir.path }}/completion/bash/task.bash"
+        dest: $HOME/.local/share/bash-completion/task.bash
+        mode: "0755"
+        # I don't know where zsh completion is supposed to go
+        # - name: Install zsh completion
+        #   ansible.builtin.copy:
+        #     src: "{{ taskfile_tmp_dir.path }}/completion/zsh/_task"
+        #     dest: $HOME/.local/share/zsh/site-functions/_task
+        #     mode: "0755"

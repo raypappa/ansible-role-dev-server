@@ -1,0 +1,13 @@
+---
+- name: Install komac nightly
+  tags:
+    - komac-nightly
+    - never
+  ansible.builtin.unarchive:
+    src: "https://github.com/russellbanks/Komac/releases/download/nightly/\
+      komac-nightly-{{ ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
+      {{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
+    remote_src: true
+    keep_newer: true
+    mode: "0755"
+    dest: $HOME/.local/bin/

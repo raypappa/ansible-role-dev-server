@@ -1,0 +1,25 @@
+---
+- name: Install Git-plugins # noqa: latest[git]
+  tags:
+    - git-plugins
+  ansible.builtin.git:
+    repo: https://github.com/afeld/git-plugins.git
+    dest: $HOME/.git-plugins
+    update: true
+- name: Install git-checkout-branch
+  tags:
+    - git-checkout-branch
+  block:
+    - name: Install git-checkout-branch on amd64
+      when: ansible_architecture == "amd64"
+      ansible.builtin.get_url:
+        url: https://github.com/royeo/git-checkout-branch/releases/latest/download/git-checkout-branch-{{ ansible_system }}-{{ ansible_architecture }}
+        dest: $HOME/.local/bin/git-checkout-branch
+        mode: "0755"
+    # TODO(raypappa): go install github.com/royeo/git-checkout-branch@latest for arm64
+- name: Install pre-commit via uv # noqa: no-changed-when
+  tags:
+    - pre-commit
+  ansible.builtin.command:
+    cmd: uv tool install pre-commit
+    creates: $HOME/.local/bin/pre-commit

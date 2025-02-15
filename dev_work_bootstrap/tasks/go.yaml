@@ -1,0 +1,20 @@
+---
+- name: Install goenv # noqa: latest[git]
+  tags:
+    - goenv
+  ansible.builtin.git:
+    repo: https://github.com/go-nv/goenv.git
+    dest: $HOME/.goenv
+    update: true
+- name: Setup latest version of go with goenv
+  tags:
+    - go
+  block:
+    - name: Install latest version of go # noqa: no-changed-when
+      tags:
+        - go
+      ansible.builtin.command: goenv install latest -s -q
+    - name: Set  latest version of go as global # noqa: no-changed-when
+      tags:
+        - go
+      ansible.builtin.command: goenv global latest

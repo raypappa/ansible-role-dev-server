@@ -1,0 +1,52 @@
+- name: Install nvm # noqa: latest[git]
+  ansible.builtin.git:
+    repo: https://github.com/nvm-sh/nvm.git
+    dest: $HOME/.nvm
+    recursive: false
+  tags:
+    - nvm
+- name: Install zsh-nvm # noqa: latest[git]
+  ansible.builtin.git:
+    repo: https://github.com/lukechilds/zsh-nvm.git
+    dest: $HOME/.zsh-nvm
+  tags: zsh-nvm
+- name: Setup nvm
+  tags:
+    - nvm
+  ansible.builtin.shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install --lts --latest-npm -b --no-progress --default"
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
+    chdir: "{{ ansible_env.HOME }}"
+    executable: /bin/bash
+# TODO(raypappa): NVM_BIN won't be present on first run because nvm isn't loaded in the shell.
+# - name: Install npm modules and symlink
+#   tags:
+#     - npm
+#   block:
+#     - name: Set npm packages to install globally
+#       ansible.builtin.set_fact:
+#         npm_packages:
+#         - jsonlint
+#         - yaml-language-server
+#         - cspell
+#         - aws-azure-login
+#         - markdown-toc
+#     - name: Install npm modules
+#       community.general.npm:
+#         global: true
+#         name: "{{ item }}"
+#       loop: "{{ npm_packages }}"
+#     - name: Symlink to global
+#       ansible.builtin.file:
+#         src: $NVM_BIN/{{ item }}
+#         dest: $HOME/.local/bin/{{ item }}
+#         state: link
+#       loop: "{{ npm_packages }}"
+- name: Install pnpm
+  tags:
+    - pnpm
+  ansible.builtin.get_url:
+    url: "https://github.com/pnpm/pnpm/releases/latest/download/\
+      pnpm-{{ 'macos' if ansible_system == 'Darwin' else ansible_system | lower }}-{{ pnpm[ansible_system][ansible_architecture] }}"
+    dest: $HOME/.local/bin/pnpm
+    mode: "0755"

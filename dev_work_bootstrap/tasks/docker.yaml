@@ -1,0 +1,33 @@
+---
+- name: Install docker
+  block:
+    - name: Install docker for Darwin
+      when: ansible_system == "Darwin"
+      community.general.homebrew:
+        name:
+          - docker
+          - docker-completion
+          - docker-buildx
+- name: Install lazydocker
+  tags:
+    - lazydocker
+  block:
+    - name: "Find latest lazydocker version"
+      ansible.builtin.uri:
+        url: https://github.com/jesseduffield/lazydocker/releases/latest
+        headers:
+          Accept: application/json
+        status_code: 200
+      register: lazydocker_latest
+    - name: "Extract lazydocker"
+      ansible.builtin.unarchive:
+        src: "https://github.com/jesseduffield/lazydocker/releases/download/\
+          {{ lazydocker_latest.json.tag_name }}/\
+          lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system }}_{{ lazydocker[ansible_system][ansible_architecture] }}.tar.gz"
+        dest: $HOME/.local/bin/
+        include:
+          - lazydocker
+        keep_newer: true
+        remote_src: true
+        mode: "0755"
