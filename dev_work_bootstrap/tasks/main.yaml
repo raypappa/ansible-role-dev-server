@@ -754,6 +754,9 @@
         keep_newer: true
         remote_src: true
         mode: "0755"
+    - name: Verify rain
+      ansible.builtin.command:
+        cmd: $HOME/.local/bin/rain --version
 - name: Install tools via uv # noqa: no-changed-when
   tags:
     - uv-tools
