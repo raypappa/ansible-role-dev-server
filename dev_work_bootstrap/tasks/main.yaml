@@ -26,7 +26,7 @@
         cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
 - name: Ensure local bin directory exists
   ansible.builtin.file:
-    path: $HOME/.local/bin
+    path: $HOME/.local/bin/
     state: directory
     mode: "0755"
 - name: Setup authorized_keys
@@ -182,7 +182,7 @@
           {{ lazydocker_latest.json.tag_name }}/\
           lazydocker_{{ lazydocker_latest.json.tag_name | replace('v', '') }}_\
           {{ ansible_system }}_{{ lazydocker[ansible_system][ansible_architecture] }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         include:
           - lazydocker
         keep_newer: true
@@ -206,7 +206,7 @@
     - name: Copy tflint
       ansible.builtin.copy:
         src: "{{ tflint_tmp_dir.path }}/tflint"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         mode: "0755"
 - name: Install tenv
   tags:
@@ -224,7 +224,7 @@
         src: "https://github.com/tofuutils/tenv/releases/download/\
           {{ tenv_latest.json.tag_name }}/\
           tenv_{{ tenv_latest.json.tag_name }}_{{ ansible_system }}_{{ tenv[ansible_system][ansible_architecture] }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         keep_newer: true
         include:
           - tenv
@@ -248,7 +248,7 @@
         remote_src: true
         keep_newer: true
         mode: "0755"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         creates: $HOME/.local/bin/uvx
         include:
           - "{{ uv_dir_name }}/uv"
@@ -272,7 +272,7 @@
           {{ terraform_docs_latest.json.tag_name }}/\
           terraform-docs-{{ terraform_docs_latest.json.tag_name }}-{{ ansible_system | lower }}-\
           {{ terraform_docs[ansible_system][ansible_architecture] }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         keep_newer: true
         include:
           - terraform-docs
@@ -295,7 +295,7 @@
     - name: "Download glow"
       ansible.builtin.unarchive:
         src: "https://github.com/charmbracelet/glow/releases/download/{{ glow_latest.json.tag_name }}/{{ glow_dir_name }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         extra_opts:
           - --strip-components=1
         include: "{{ glow_dir_name }}/glow"
@@ -324,7 +324,7 @@
           {{ vale_latest.json.tag_name }}/\
           vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
           {{ vale_system }}_{{ vale_arch }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         include:
           - vale
         keep_newer: true
@@ -428,7 +428,7 @@
         src: "https://github.com/junegunn/fzf/releases/download/\
           {{ fzf_latest.json.tag_name }}/fzf-{{ fzf_latest.json.tag_name | replace('v', '') }}-\
           {{ ansible_system }}_{{ fzf[ansible_system][ansible_architecture] }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         include:
           - fzf
         keep_newer: true
@@ -484,7 +484,7 @@
         # ripgrep-14.1.1-aarch64-apple-darwin.tar.gz
         # ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz
         src: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name }}/{{ ripgrep_dir }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         include:
           - "{{ ripgrep_dir }}/rg"
         keep_newer: true
@@ -513,7 +513,7 @@
       ansible.builtin.unarchive:
         src: "https://github.com/sharkdp/fd/releases/download/\
           {{ fd_latest.json.tag_name }}/{{ fd_dir_name }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         include:
           - "{{ fd_dir_name }}/fd"
         keep_newer: true
@@ -649,7 +649,7 @@
   ansible.builtin.unarchive:
     src: "https://github.com/derailed/k9s/releases/latest/download/\
       k9s_{{ ansible_system }}_{{ k9s[ansible_system][ansible_architecture] }}.tar.gz"
-    dest: $HOME/.local/bin
+    dest: $HOME/.local/bin/
     include:
       - k9s
     keep_newer: true
@@ -694,7 +694,7 @@
           {{ kustomize_latest.json.tag_name }}/\
           kustomize_{{ 1 | extract(kustomize_latest.json.tag_name | split('/')) }}_\
           {{ ansible_system | lower }}_{{ kustomize[ansible_system][ansible_architecture] }}.tar.gz"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         mode: "0755"
         keep_newer: true
         remote_src: true
@@ -717,7 +717,7 @@
     remote_src: true
     keep_newer: true
     mode: "0755"
-    dest: $HOME/.local/bin
+    dest: $HOME/.local/bin/
 - name: Install yq
   tags:
     - yq
@@ -745,7 +745,7 @@
         remote_src: true
         keep_newer: true
         mode: "0755"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         include:
           - ct
 - name: Install rain
@@ -773,7 +773,7 @@
     - name: Copy rain to local bin
       ansible.builtin.copy:
         src: "{{ rain_tmp_dir.path }}/{{ rain_dir_name }}/rain"
-        dest: $HOME/.local/bin
+        dest: $HOME/.local/bin/
         mode: "0755"
 - name: Install tools via uv # noqa: no-changed-when
   tags:
