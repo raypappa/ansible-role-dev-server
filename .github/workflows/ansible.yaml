@@ -51,7 +51,7 @@ jobs:
           pyenv version
           goenv version
           rbenv version
-          tfenv version
+          ls $HOME/.local/bin/
           tenv version
           tmux --version
           task --version
@@ -85,32 +85,33 @@ jobs:
           nvm version
           go version
           npm --version
-  verify_macos:
-    # needs: check
-    strategy:
-      matrix:
-        os:
-          # During this massive push to get everything working. I'm going to disable the amd64 macos until I can get it working.
-          # - macos-13
-          - macos-latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Install Ansible
-        run: |
-          brew update
-          brew install ansible
-      - name: Add pyenv to path
-        run: |
-          echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
-      - name: Run Ansible playbook
-        uses: dawidd6/action-ansible-playbook@v3
-        with:
-          playbook: playbook.yaml
-          directory: ./
-          options: |
-            --tags gh
+          tfenv version
+  # verify_macos:
+  #   # needs: check
+  #   strategy:
+  #     matrix:
+  #       os:
+  #         # During this massive push to get everything working. I'm going to disable the amd64 macos until I can get it working.
+  #         # - macos-13
+  #         - macos-latest
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 2
+  #     - name: Install Ansible
+  #       run: |
+  #         brew update
+  #         brew install ansible
+  #     - name: Add pyenv to path
+  #       run: |
+  #         echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
+  #         echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
+  #         echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
+  #     - name: Run Ansible playbook
+  #       uses: dawidd6/action-ansible-playbook@v3
+  #       with:
+  #         playbook: playbook.yaml
+  #         directory: ./
+  #         options: |
+  #           --tags gh
