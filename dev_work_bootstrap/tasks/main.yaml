@@ -24,6 +24,11 @@
     - name: Ensure dotfile repo is up to date
       ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
         cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
+- name: Ensure local bin directory exists
+  ansible.builtin.file:
+    path: $HOME/.local/bin
+    state: directory
+    mode: "0755"
 - name: Setup authorized_keys
   tags:
     - authorized_keys
