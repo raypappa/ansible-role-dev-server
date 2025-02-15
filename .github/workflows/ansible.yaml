@@ -25,7 +25,7 @@ jobs:
         os:
           # Arm debian is broken somehow. not sure why. disabling for now.
           - ubuntu-24.04-arm
-          # - ubuntu-latest
+          - ubuntu-latest
     runs-on: ${{ matrix.os }}
     # needs: check
     steps:
