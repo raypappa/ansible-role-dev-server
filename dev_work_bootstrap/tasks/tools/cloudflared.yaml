@@ -7,7 +7,7 @@
       tags:
         - cloudflared
       ansible.builtin.unarchive:
-        url: "https://github.com/cloudflare/cloudflared/releases/download/2025.2.0/\
+        src: "https://github.com/cloudflare/cloudflared/releases/latest/download/\
           cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}.tgz"
         dest: $HOME/.local/bin/
         mode: "0755"

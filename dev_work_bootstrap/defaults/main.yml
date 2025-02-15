@@ -159,6 +159,7 @@ aws_sam_cli:
     x86_64: x86_64
     aarch64: arm64
 brew_packages:
+  # - openssh
   - git
   - make
   - unzip
@@ -176,7 +177,6 @@ brew_packages:
   - gnu-indent
   - gnu-getopt
   - grep
-  - openssh
   - tmux
   - alacritty
   - visual-studio-code
