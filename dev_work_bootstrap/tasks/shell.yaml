@@ -17,9 +17,14 @@
     - name: Ensure dotfile repo is up to date
       ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
         cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
-- name: Ensure local bin directory exists
+- name: Ensure core directories exists
+  loop:
+    - $HOME/.local
+    - $HOME/.local/bin
+    - $HOME/.local/share
+    - $HOME/.local/share/bash-completion
   ansible.builtin.file:
-    path: $HOME/.local/bin/
+    path: "{{ item }}"
     state: directory
     mode: "0755"
 - name: Setup authorized_keys
@@ -57,6 +62,7 @@
         depth: 1
         dest: "$HOME/.zsh/spaceship"
         recursive: false
+
 - name: Tmux completions
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/master/completions/tmux
