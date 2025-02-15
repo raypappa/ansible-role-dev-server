@@ -148,3 +148,10 @@ pnpm:
   Darwin:
     x86_64: x64
     arm64: arm64
+glow:
+  Linux:
+    x86_64: x86_64
+    aarch64: arm64
+  Darwin:
+    x86_64: x86_64
+    arm64: arm64

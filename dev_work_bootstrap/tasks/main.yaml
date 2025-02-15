@@ -275,15 +275,17 @@
           Accept: application/json
         status_code: 200
       register: glow_latest
+    - name: Set glow facts
+      ansible.builtin.set_fact:
+        glow_dir_name: "glow_{{ glow_latest.json.tag_name | replace('v', '') }}_\
+          {{ ansible_system }}_{{ glow[ansible_system][ansible_architecture] }}"
     - name: "Download glow"
       ansible.builtin.unarchive:
-        src: "https://github.com/charmbracelet/glow/releases/download/\
-          {{ glow_latest.json.tag_name }}/glow_{{ glow_latest.json.tag_name | replace('v', '') }}_\
-          {{ ansible_system }}_{{ ansible_architecture }}.tar.gz"
+        src: "https://github.com/charmbracelet/glow/releases/download/{{ glow_latest.json.tag_name }}/{{ glow_dir_name }}.tar.gz"
         dest: $HOME/.local/bin
         extra_opts:
           - --strip-components=1
-        include: glow_{{ glow_latest.json.tag_name | replace('v', '') }}_{{ ansible_system }}_{{ ansible_architecture }}/glow
+        include: "{{ glow_dir_name }}/glow"
         keep_newer: true
         remote_src: true
 - name: Install vale
