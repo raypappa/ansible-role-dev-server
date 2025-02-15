@@ -9,7 +9,6 @@ lazydocker:
   Linux:
     x86_64: x86_64
     aarch64: arm64
-
 tflint:
   Darwin:
     x86_64: amd64
@@ -159,3 +158,31 @@ aws_sam_cli:
   Linux:
     x86_64: x86_64
     aarch64: arm64
+brew_packages:
+  - git
+  - make
+  - unzip
+  - wget
+  - moreutils
+  - zip
+  - bash-completion
+  - binutils
+  - coreutils
+  - findutils
+  - gnu-tar
+  - gnu-sed
+  - gawk
+  - gnutls
+  - gnu-indent
+  - gnu-getopt
+  - grep
+  - openssh
+  - tmux
+  - awscli
+  - aws-sam-cli
+  - docker
+  - docker-completion
+  - docker-buildx
+  - alacritty
+  - visual-studio-code
+  - alfred
