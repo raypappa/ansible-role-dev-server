@@ -598,7 +598,6 @@
       when: ansible_system == "Darwin"
       ansible.builtin.copy:
         src: "{{ gh_tmp_dir.path }}/{{ gh_dir_name }}/bin/gh"
-        creates: $HOME/.local/bin/gh
         dest: $HOME/.local/bin/
         mode: "0755"
 - name: Install taskfile
