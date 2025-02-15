@@ -24,8 +24,8 @@ jobs:
       matrix:
         os:
           # Arm debian is broken somehow. not sure why. disabling for now.
-          # - ubuntu-24.04-arm
-          - ubuntu-latest
+          - ubuntu-24.04-arm
+          # - ubuntu-latest
     runs-on: ${{ matrix.os }}
     # needs: check
     steps:
@@ -73,3 +73,5 @@ jobs:
         with:
           playbook: playbook.yaml
           directory: ./
+          options: |
+            --tags gh
