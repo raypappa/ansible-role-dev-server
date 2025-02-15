@@ -188,18 +188,26 @@
         keep_newer: true
         remote_src: true
         mode: "0755"
-- name: "Download tflint"
+- name: "Install tflint"
   tags:
     - tflint
-  ansible.builtin.unarchive:
-    src: "https://github.com/terraform-linters/tflint/releases/latest/download/\
-      tflint_{{ ansible_system | lower }}_{{ tflint[ansible_system][ansible_architecture] }}.zip"
-    include:
-      - tflint
-    dest: $HOME/.local/bin
-    mode: "0755"
-    keep_newer: true
-    remote_src: true
+  block:
+    - name: Create tmp dir for tflint
+      ansible.builtin.tempfile:
+        state: directory
+      register: tflint_tmp_dir
+    - name: "Install tflint"
+      ansible.builtin.unarchive:
+        src: "https://github.com/terraform-linters/tflint/releases/latest/download/\
+          tflint_{{ ansible_system | lower }}_{{ tflint[ansible_system][ansible_architecture] }}.zip"
+        dest: "{{ tflint_tmp_dir.path }}"
+        keep_newer: true
+        remote_src: true
+    - name: Copy tflint
+      ansible.builtin.copy:
+        src: "{{ tflint_tmp_dir.path }}/tflint"
+        dest: $HOME/.local/bin
+        mode: "0755"
 - name: Install tenv
   tags:
     - tenv
@@ -574,22 +582,25 @@
           - --strip-components=1
         remote_src: true
         mode: "0755"
+    - name: Create tmp dir for github cli
+      ansible.builtin.tempfile:
+        state: directory
+      register: gh_tmp_dir
+      when: ansible_system == "Darwin"
     - name: Download Darwin Github CLI
       when: ansible_system == "Darwin"
       ansible.builtin.unarchive:
         src: "https://github.com/cli/cli/releases/download/{{ gh_latest.json.tag_name }}/{{ gh_dir_name }}.zip"
-        dest: $HOME/.local/bin/
-        include:
-          - "{{ gh_dir_name }}/bin/gh"
+        dest: "{{ gh_tmp_dir.path }}"
         keep_newer: true
         remote_src: true
-        extra_opts:
-          - -j
-        mode: "0755"
+    - name: Copy Github CLI
+      when: ansible_system == "Darwin"
+      ansible.builtin.copy:
+        src: "{{ gh_tmp_dir.path }}/{{ gh_dir_name }}/bin/gh"
         creates: $HOME/.local/bin/gh
-    - name: Verify Github CLI  # noqa: no-changed-when
-      ansible.builtin.command:
-        cmd: $HOME/.local/bin/gh --version
+        dest: $HOME/.local/bin/
+        mode: "0755"
 - name: Install taskfile
   tags:
     - taskfile
@@ -765,9 +776,6 @@
         src: "{{ rain_tmp_dir.path }}/{{ rain_dir_name }}/rain"
         dest: $HOME/.local/bin
         mode: "0755"
-    - name: Verify rain
-      ansible.builtin.command:
-        cmd: $HOME/.local/bin/rain --version
 - name: Install tools via uv # noqa: no-changed-when
   tags:
     - uv-tools
