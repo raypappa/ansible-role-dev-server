@@ -93,32 +93,35 @@ jobs:
           tfenv version
         # Because it's not installed on all hosts
         # git-checkout-branch -a
-  # verify_macos:
-  #   # needs: check
-  #   strategy:
-  #     matrix:
-  #       os:
-  #         # During this massive push to get everything working. I'm going to disable the amd64 macos until I can get it working.
-  #         # - macos-13
-  #         - macos-latest
-  #   runs-on: ${{ matrix.os }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 2
-  #     - name: Install Ansible
-  #       run: |
-  #         brew update
-  #         brew install ansible
-  #     - name: Add pyenv to path
-  #       run: |
-  #         echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
-  #         echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
-  #         echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
-  #     - name: Run Ansible playbook
-  #       uses: dawidd6/action-ansible-playbook@v3
-  #       with:
-  #         playbook: playbook.yaml
-  #         directory: ./
-  #         options: |
-  #           --tags gh
+  verify_macos:
+    # needs: check
+    strategy:
+      matrix:
+        os:
+          - macos-13
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: "Install Python"
+        uses: actions/setup-python@v4
+      - name: Install Ansible
+        run: python -m pip install ansible
+      # - name: Install Ansible
+      #   run: |
+      #     if [[ uname == "Darwin" ]];then
+      #       brew update
+      #       brew install ansible
+      #    fi
+      - name: Add pyenv to path
+        run: |
+          echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
+      - name: Run Ansible playbook
+        uses: dawidd6/action-ansible-playbook@v3
+        with:
+          playbook: playbook.yaml
+          directory: ./
