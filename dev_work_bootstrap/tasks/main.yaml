@@ -526,7 +526,7 @@
   tags:
     - pnpm
   ansible.builtin.get_url:
-    url: https://github.com/pnpm/pnpm/releases/latest/download/pnpm-{{ ansible_system | lower }}-{{ "arm64" if ansible_architecture == "amd64" else "x64" }}
+    url: https://github.com/pnpm/pnpm/releases/latest/download/pnpm-{{ ansible_system | lower }}-{{ pnpm[ansible_system][ansible_architecture] }}
     dest: $HOME/.local/bin/pnpm
     mode: "0755"
 - name: Install Github CLI
@@ -535,7 +535,9 @@
   block:
     - name: Set gh facts
       ansible.builtin.set_fact:
-        gh_system: "{{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}"
+        gh_dir_name: "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_\
+          {{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}_\
+          {{ gh[ansible_system][ansible_architecture] }}"
     - name: Find latest version
       ansible.builtin.uri:
         url: https://github.com/cli/cli/releases/latest
@@ -547,11 +549,10 @@
       ansible.builtin.unarchive:
         src: "https://github.com/cli/cli/releases/download/\
           {{ gh_latest.json.tag_name }}/\
-          gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ gh_system }}_\
-          {{ gh[ansible_system][ansible_architecture] }}.tar.gz"
+          {{ gh_dir_name }}.tar.gz"
         dest: $HOME/.local/
         include:
-          - "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_{{ gh_system }}_{{ gh[ansible_system][ansible_architecture] }}/bin/gh"
+          - "{{ gh_dir_name }}/bin/gh"
         keep_newer: true
         extra_opts:
           - --strip-components=1
