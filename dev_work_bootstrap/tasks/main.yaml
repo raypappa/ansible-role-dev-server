@@ -553,12 +553,6 @@
       register: gh_latest
     - name: Set Github CLI facts
       ansible.builtin.set_fact:
-        # gh_2.67.0_macOS_arm64
-
-        # gh_2.67.0_linux_amd64.tar.gz
-        # gh_2.67.0_linux_arm64.tar.gz
-        # gh_2.67.0_macOS_amd64.zip
-        # gh_2.67.0_macOS_arm64.zip
         gh_dir_name: "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_\
           {{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}_\
           {{ gh[ansible_system][ansible_architecture] }}"
@@ -587,7 +581,9 @@
         creates: $HOME/.local/bin/gh
     - name: Verify Github CLI  # noqa: no-changed-when
       ansible.builtin.command:
-        cmd: $HOME/.local/bin/gh --version
+        cmd: |
+          ls $HOME/.local/;
+          $HOME/.local/bin/gh --version
 - name: Install taskfile
   tags:
     - taskfile
