@@ -359,7 +359,8 @@
       register: aws_sam_cli_tmp_dir
     - name: Download
       ansible.builtin.unarchive:
-        src: "https://github.com/aws/aws-sam-cli/releases/download/{{ sam_latest.json.tag_name }}/aws-sam-cli-linux-{{ ansible_architecture }}.zip"
+        src: "https://github.com/aws/aws-sam-cli/releases/download/\
+          {{ sam_latest.json.tag_name }}/aws-sam-cli-linux-{{ aws_sam_cli[ansible_system][ansible_architecture] }}.zip"
         dest: "{{ aws_sam_cli_tmp_dir.path }}"
         remote_src: true
         creates: "{{ aws_sam_cli_tmp_dir.path }}/install"
@@ -583,9 +584,7 @@
         creates: $HOME/.local/bin/gh
     - name: Verify Github CLI  # noqa: no-changed-when
       ansible.builtin.command:
-        cmd: |
-          ls $HOME/.local/;
-          $HOME/.local/bin/gh --version
+        cmd: $HOME/.local/bin/gh --version
 - name: Install taskfile
   tags:
     - taskfile
