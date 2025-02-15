@@ -8,7 +8,7 @@ on: # yamllint disable-line rule:truthy
     branches:
       - main
 jobs:
-  check:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
         with:
           requirements_file: dev_work_bootstrap/meta/requirements.yml
   verify:
-    # needs: check
+    # needs: lint
     strategy:
       fail-fast: false
       matrix:

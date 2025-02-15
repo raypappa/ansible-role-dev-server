@@ -3,8 +3,11 @@
   community.general.homebrew:
     update_homebrew: true
 - name: Upgrade all homebrew packages
+  debugger: on_failed
   community.general.homebrew:
     upgrade_all: true
+    install_options:
+      - --overwrite
 - name: Install homebrew forumale
   loop:
     - git
