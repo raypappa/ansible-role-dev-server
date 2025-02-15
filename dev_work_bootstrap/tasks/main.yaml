@@ -1,30 +1,43 @@
 # SPDX-License-Identifier: MIT-0
 ---
 # tasks file for dev_work_bootstrap
-- name: Clone dotfiles # noqa: latest[git]
-  ansible.builtin.git:
-    dest: $HOME/.cfg
-    repo: https://github.com/raypappa/dotfiles.git
-    bare: true
-    update: true
-- name: Checkout dotfiles
-  ansible.builtin.command: # noqa: command-instead-of-module
-    cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout main --force
-  args:
-    creates: $HOME/.zshrc
-- name: Ensure dotfile repo is up to date
-  ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
-    cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
-- name: Ensure .ssh dir
-  ansible.builtin.file:
-    path: $HOME/.ssh
-    state: directory
-    mode: "0700"
-- name: Authorized_keys
-  ansible.builtin.copy:
-    src: authorized_keys
-    dest: $HOME/.ssh/authorized_keys
-    mode: "0600"
+- name: Install OS Specific packages
+  ansible.builtin.include_tasks: "{{ ansible_os_family | lower }}.yaml"
+- name: WSL
+  when: '"microsoft" in ansible_facts["kernel"]'
+  ansible.builtin.include_tasks: wsl.yaml
+- name: Setup dotfiles
+  tags:
+    - dotfiles
+  block:
+    - name: Clone dotfiles # noqa: latest[git]
+      ansible.builtin.git:
+        dest: $HOME/.cfg
+        repo: https://github.com/raypappa/dotfiles.git
+        bare: true
+        update: true
+    - name: Checkout dotfiles
+      ansible.builtin.command: # noqa: command-instead-of-module
+        cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout main --force
+      args:
+        creates: $HOME/.zshrc
+    - name: Ensure dotfile repo is up to date
+      ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
+        cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
+- name: Setup authorized_keys
+  tags:
+    - authorized_keys
+  block:
+    - name: Ensure .ssh dir
+      ansible.builtin.file:
+        path: $HOME/.ssh
+        state: directory
+        mode: "0700"
+    - name: Authorized_keys
+      ansible.builtin.copy:
+        src: authorized_keys
+        dest: $HOME/.ssh/authorized_keys
+        mode: "0600"
 
 - name: Install bash-it # noqa: latest[git]
   ansible.builtin.git:
@@ -146,11 +159,6 @@
 #     curl -L -s https://github.com/alacritty/alacritty/releases/latest/download/alacritty.info | sudo tic -xe alacritty,alacritty-direct -
 #   tags:
 #     - alacritty
-- name: Install OS Specific packages
-  ansible.builtin.include_tasks: "{{ ansible_os_family | lower }}.yaml"
-- name: WSL
-  when: '"microsoft" in ansible_facts["kernel"]'
-  ansible.builtin.include_tasks: wsl.yaml
 
 - name: Install lazydocker
   tags:
@@ -526,7 +534,8 @@
   tags:
     - pnpm
   ansible.builtin.get_url:
-    url: https://github.com/pnpm/pnpm/releases/latest/download/pnpm-{{ ansible_system | lower }}-{{ pnpm[ansible_system][ansible_architecture] }}
+    url: https://github.com/pnpm/pnpm/releases/latest/download/\
+      pnpm-{{ 'macos' if ansible_system == 'Darwin' else ansible_system | lower }}-{{ pnpm[ansible_system][ansible_architecture] }}
     dest: $HOME/.local/bin/pnpm
     mode: "0755"
 - name: Install Github CLI
