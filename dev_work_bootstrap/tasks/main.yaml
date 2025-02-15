@@ -534,8 +534,8 @@
   tags:
     - pnpm
   ansible.builtin.get_url:
-    url: https://github.com/pnpm/pnpm/releases/latest/download/\
-      pnpm-{{ 'macos' if ansible_system == 'Darwin' else ansible_system | lower }}-{{ pnpm[ansible_system][ansible_architecture] }}
+    url: "https://github.com/pnpm/pnpm/releases/latest/download/\
+      pnpm-{{ 'macos' if ansible_system == 'Darwin' else ansible_system | lower }}-{{ pnpm[ansible_system][ansible_architecture] }}"
     dest: $HOME/.local/bin/pnpm
     mode: "0755"
 - name: Install Github CLI
