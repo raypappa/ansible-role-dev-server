@@ -24,7 +24,7 @@ jobs:
       matrix:
         os:
           # Arm debian is broken somehow. not sure why. disabling for now.
-          - ubuntu-24.04-arm
+          # - ubuntu-24.04-arm
           - ubuntu-latest
     runs-on: ${{ matrix.os }}
     # needs: check
@@ -41,6 +41,7 @@ jobs:
           echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
           echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
           echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.tfenv/bin" >> "$GITHUB_PATH"
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v3
         with:
@@ -51,9 +52,8 @@ jobs:
           pyenv version
           goenv version
           rbenv version
-          ls $HOME/.local/bin/
           tenv version
-          tmux --version
+          tmux -V
           task --version
           lazydocker --version
           tflint --version
