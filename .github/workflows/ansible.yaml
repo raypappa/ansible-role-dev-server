@@ -81,9 +81,7 @@ jobs:
           rain --version
           mdformat --version
           pre-commit --version
-          nvm version
           go version
-          npm --version
           tfenv version
         # Because it's not installed on all hosts
         # git-checkout-branch -a
