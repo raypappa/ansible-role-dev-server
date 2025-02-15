@@ -43,12 +43,9 @@ jobs:
         if: ${{ runner.os == 'macOS' }}
         run: |
           brew update
+          brew upgrade
           brew install ansible
           brew cleanup
-          echo "List of installed formulae"
-          brew list --formula --full-name -1
-          echo "relinking all formulae"
-          brew link --overwrite $(brew list --formula --full-name -1 | tr '\n' ' ')
       - name: Add git dirs to path
         run: |
           echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
