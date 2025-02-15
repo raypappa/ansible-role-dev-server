@@ -78,7 +78,7 @@ jobs:
           cloudflared version
           yq --version
           ct version
-          rain version
+          rain --version
           mdformat --version
           pre-commit --version
           nvm version

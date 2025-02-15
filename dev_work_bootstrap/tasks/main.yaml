@@ -33,12 +33,12 @@
   tags:
     - authorized_keys
   block:
-    - name: Ensure .ssh dir
+    - name: Ensure .ssh dir exists
       ansible.builtin.file:
         path: $HOME/.ssh
         state: directory
         mode: "0700"
-    - name: Authorized_keys
+    - name: Create Authorized_keys
       ansible.builtin.copy:
         src: authorized_keys
         dest: $HOME/.ssh/authorized_keys
@@ -134,7 +134,7 @@
         depth: 1
         dest: "$HOME/.zsh/spaceship"
         recursive: false
-- name: Git-plugins # noqa: latest[git]
+- name: Install Git-plugins # noqa: latest[git]
   tags:
     - git-plugins
   ansible.builtin.git:
@@ -318,8 +318,6 @@
       register: vale_latest
     - name: "Download vale"
       ansible.builtin.unarchive:
-        # https://github.com/errata-ai/vale/releases/download/v3.9.5/vale_3.9.5_Darwin_arm64.tar.gz
-        # https://github.com/errata-ai/vale/releases/download/v3.9.5/vale_3.9.5_Darwin_arm64.tar.gz
         src: "https://github.com/errata-ai/vale/releases/download/\
           {{ vale_latest.json.tag_name }}/\
           vale_{{ vale_latest.json.tag_name | replace('v', '') }}_\
@@ -348,7 +346,7 @@
         remote_src: true
         creates: "{{ aws_cli_tmp_dir.path }}/aws/install"
         mode: "0755"
-    - name: Run the installer
+    - name: Run the installer for aws cli
       ansible.builtin.command:
       args:
         cmd: "{{ aws_cli_tmp_dir.path }}/aws/install --bin-dir $HOME/.local/bin --install-dir $HOME/.local/opt/aws-cli"
@@ -359,7 +357,7 @@
   tags:
     - aws-sam-cli
   block:
-    - name: Find latest version
+    - name: Find latest version of aws sam cli
       ansible.builtin.uri:
         url: https://github.com/aws/aws-sam-cli/releases/latest
         headers:
@@ -370,14 +368,14 @@
       ansible.builtin.tempfile:
         state: directory
       register: aws_sam_cli_tmp_dir
-    - name: Download
+    - name: Download aws sam cli zip
       ansible.builtin.unarchive:
         src: "https://github.com/aws/aws-sam-cli/releases/download/\
           {{ sam_latest.json.tag_name }}/aws-sam-cli-linux-{{ aws_sam_cli[ansible_system][ansible_architecture] }}.zip"
         dest: "{{ aws_sam_cli_tmp_dir.path }}"
         remote_src: true
         creates: "{{ aws_sam_cli_tmp_dir.path }}/install"
-    - name: Install
+    - name: Install aws sam cli
       ansible.builtin.command:
         cmd: "{{ aws_sam_cli_tmp_dir.path }}/install --bin-dir $HOME/.local/bin --install-dir $HOME/.local/opt/aws-sam-cli"
         creates: $HOME/.local/bin/sam
@@ -400,7 +398,7 @@
   tags:
     - kubectl
   block:
-    - name: Find latest version
+    - name: Find latest version of kubectl
       ansible.builtin.uri:
         url: https://dl.k8s.io/release/stable.txt
         status_code: 200
@@ -416,7 +414,7 @@
   tags:
     - fzf
   block:
-    - name: Find latest version
+    - name: Find latest version of fzf
       ansible.builtin.uri:
         url: https://github.com/junegunn/fzf/releases/latest
         headers:
@@ -663,7 +661,7 @@
       ansible.builtin.stat:
         path: "{{ rustup_bin }}"
       register: rustup_st
-    - name: Create temporary directory
+    - name: Create temporary directory for rustup
       ansible.builtin.tempfile:
         state: directory
         suffix: rustup
@@ -831,7 +829,7 @@
     - name: Install latest version of go # noqa: no-changed-when
       tags:
         - go
-      ansible.builtin.command: goenv install latest -q
+      ansible.builtin.command: goenv install latest -s -q
     - name: Set  latest version of go as global # noqa: no-changed-when
       tags:
         - go
