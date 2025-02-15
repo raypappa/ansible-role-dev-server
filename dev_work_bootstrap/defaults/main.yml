@@ -137,7 +137,7 @@ fd:
 tree_sitter:
   Linux:
     x86_64: x64
-    aarch64: aarch64
+    aarch64: arm64
   Darwin:
     x86_64: x64
-    arm64: aarch64
+    arm64: arm64
