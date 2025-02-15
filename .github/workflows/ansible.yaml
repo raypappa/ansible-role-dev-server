@@ -43,7 +43,6 @@ jobs:
         if: ${{ runner.os == 'macOS' }}
         run: |
           brew update
-          brew upgrade
           brew install ansible
           brew cleanup
       - name: Add git dirs to path

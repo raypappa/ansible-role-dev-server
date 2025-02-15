@@ -3,11 +3,6 @@
 - name: Update homebrew
   community.general.homebrew:
     update_homebrew: true
-- name: Upgrade all homebrew packages
-  community.general.homebrew:
-    upgrade_all: true
-    # install_options:
-    #   - --overwrite
 # Using a loop is less effecient than using a single task with a list of
 # packages. but this avoids the need to separate out cask only packages.
 # brew will not allow cask and formulae to be installed in the same task.
@@ -16,3 +11,5 @@
   community.general.homebrew:
     name: "{{ item }}"
     state: "latest"
+    install_options:
+      - --overwrite
