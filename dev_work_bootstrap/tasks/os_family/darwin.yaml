@@ -10,5 +10,7 @@
   loop: "{{ brew_packages }}"
   community.general.homebrew:
     name: "{{ item }}"
-    state: "latest"
+    state: "present" # i'd like to run as latest but it causes issues with any existing packages and brew.
     install_options: overwrite
+# Notes
+# failed: openssh
