@@ -328,7 +328,7 @@
   tags:
     - aws-cli
   block:
-    - name: Create tmp dir
+    - name: Create tmp dir for aws-cli
       ansible.builtin.tempfile:
         state: directory
       register: aws_cli_tmp_dir
@@ -358,7 +358,7 @@
           Accept: application/json
         status_code: 200
       register: sam_latest
-    - name: Create tmp dir
+    - name: Create tmp dir for aws-sam-cli
       ansible.builtin.tempfile:
         state: directory
       register: aws_sam_cli_tmp_dir
@@ -750,14 +750,20 @@
     - name: Set rain facts
       ansible.builtin.set_fact:
         rain_dir_name: rain-{{ rain_latest.json.tag_name }}_{{ ansible_system | lower }}-{{ rain[ansible_system][ansible_architecture] }}
+    - name: Create tmp dir for rain
+      ansible.builtin.tempfile:
+        state: directory
+      register: rain_tmp_dir
     - name: Install rain
       ansible.builtin.unarchive:
         src: "https://github.com/aws-cloudformation/rain/releases/download/{{ rain_latest.json.tag_name }}/{{ rain_dir_name }}.zip"
-        dest: $HOME/.local/bin
-        include:
-          - "{{ rain_dir_name }}/rain"
+        dest: "{{ rain_tmp_dir.path }}"
         keep_newer: true
         remote_src: true
+    - name: Copy rain to local bin
+      ansible.builtin.copy:
+        src: "{{ rain_tmp_dir.path }}/{{ rain_dir_name }}/rain"
+        dest: $HOME/.local/bin
         mode: "0755"
     - name: Verify rain
       ansible.builtin.command:
