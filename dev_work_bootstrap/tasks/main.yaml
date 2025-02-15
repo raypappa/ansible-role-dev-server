@@ -574,9 +574,11 @@
         src: "https://github.com/cli/cli/releases/download/{{ gh_latest.json.tag_name }}/{{ gh_dir_name }}.zip"
         dest: $HOME/.local/
         include:
-          - "{{ gh_dir_name }}/bin/gh"
+          - "gh"
         keep_newer: true
         remote_src: true
+        extra_opts:
+          - -j
         mode: "0755"
         creates: $HOME/.local/bin/gh
     - name: Verify Github CLI  # noqa: no-changed-when
