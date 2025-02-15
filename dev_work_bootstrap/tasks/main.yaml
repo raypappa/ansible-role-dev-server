@@ -580,8 +580,6 @@
         include:
           - "{{ gh_dir_name }}/bin/gh"
         keep_newer: true
-        extra_opts:
-          - --strip-components=1
         remote_src: true
         mode: "0755"
         creates: $HOME/.local/bin/gh
