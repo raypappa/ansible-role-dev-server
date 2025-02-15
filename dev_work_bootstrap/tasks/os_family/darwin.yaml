@@ -11,5 +11,4 @@
   community.general.homebrew:
     name: "{{ item }}"
     state: "latest"
-    install_options:
-      - "--overwrite "
+    install_options: overwrite
