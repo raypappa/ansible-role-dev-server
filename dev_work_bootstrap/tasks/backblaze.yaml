@@ -1,0 +1,13 @@
+---
+- name: Install backblaze cli on linux
+  when: ansible_system == "Linux"
+  ansible.builtin.unarchive: https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux
+  dest: $HOME/.local/bin/b2
+  mode: "0755"
+  keep_newer: true
+  remote_src: true
+- name: Install backblaze cli on Darwin
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: b2-tools
+    state: "latest"

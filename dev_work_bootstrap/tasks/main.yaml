@@ -70,3 +70,7 @@
   ansible.builtin.include_tasks: neovim.yaml
   tags:
     - neovim
+- name: Include backblaze tasks
+  ansible.builtin.include_tasks: backblaze.yaml
+  tags:
+    - backblaze

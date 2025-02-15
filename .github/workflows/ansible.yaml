@@ -99,3 +99,4 @@ jobs:
           export PATH="$GOROOT/bin:$PATH"
           export PATH="$PATH:$GOPATH/bin"
           go version
+          b2 version
