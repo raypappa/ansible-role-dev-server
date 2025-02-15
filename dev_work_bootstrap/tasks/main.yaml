@@ -688,25 +688,41 @@
         keep_newer: true
         remote_src: true
 - name: Install cloudflared
-  tags:
-    - cloudflared
-  ansible.builtin.get_url:
-    url: "https://github.com/cloudflare/cloudflared/releases/latest/download/\
-      cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}"
-    dest: $HOME/.local/bin/cloudflared
-    mode: "0755"
-- name: Install komac nightly
-  tags:
-    - komac-nightly
-    - never
-  ansible.builtin.unarchive:
-    src: "https://github.com/russellbanks/Komac/releases/download/nightly/\
-      komac-nightly-{{ ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
-      {{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
-    remote_src: true
-    keep_newer: true
-    mode: "0755"
-    dest: $HOME/.local/bin/
+  block:
+    - name: Install cloudflared for Darwin
+      when: ansible_system == "Darwin"
+      tags:
+        - cloudflared
+      ansible.builtin.unarchive:
+        url: "https://github.com/cloudflare/cloudflared/releases/download/2025.2.0/\
+          cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}.tgz"
+        dest: $HOME/.local/bin/
+        mode: "0755"
+        include:
+          - cloudflared
+        keep_newer: true
+        remote_src: true
+    - name: Install cloudflared for Linux
+      when: ansible_system == "Linux"
+      tags:
+        - cloudflared
+      ansible.builtin.get_url:
+        url: "https://github.com/cloudflare/cloudflared/releases/latest/download/\
+          cloudflared-{{ ansible_system | lower }}-{{ cloudflared[ansible_system][ansible_architecture] }}"
+        dest: $HOME/.local/bin/cloudflared
+        mode: "0755"
+    - name: Install komac nightly
+      tags:
+        - komac-nightly
+        - never
+      ansible.builtin.unarchive:
+        src: "https://github.com/russellbanks/Komac/releases/download/nightly/\
+          komac-nightly-{{ ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-\
+          {{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}.tar.gz"
+        remote_src: true
+        keep_newer: true
+        mode: "0755"
+        dest: $HOME/.local/bin/
 - name: Install yq
   tags:
     - yq
