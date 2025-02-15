@@ -509,8 +509,11 @@
     - name: Download tree-sitter
       ansible.builtin.get_url:
         # TODO(craig): check ansible_system is Darwin or MacOS
+        # https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-Darwin-x64.gz
+
         url: "https://github.com/tree-sitter/tree-sitter/releases/latest/download/\
-          tree-sitter-{{ ansible_system }}-{{ 'arm64' if ansible_architecture == 'amd64' else 'x64' }}.gz"
+          tree-sitter-{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}-\
+          {{ tree_sitter[ansible_system][ansible_architecture] }}.gz"
         dest: "{{ tree_sitter_tmp_dir.path }}/tree-sitter.gz"
         mode: "0644"
     - name: Install tree-sitter
