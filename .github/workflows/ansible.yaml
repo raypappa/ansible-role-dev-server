@@ -44,8 +44,9 @@ jobs:
         run: |
           brew update
           brew install ansible
+          brew cleanup
           brew doctor
-          brew link --overwrite
+          brew link --overwrite $(brew list --full-name -1 | tr '\n' ' ')
           brew doctor
       - name: Add git dirs to path
         run: |
