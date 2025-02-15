@@ -46,6 +46,45 @@ jobs:
         with:
           playbook: playbook.yaml
           directory: ./
+      - name: "Execute commands"
+        run: |
+          pyenv version
+          goenv version
+          rbenv version
+          tfenv version
+          tenv version
+          tmux --version
+          task --version
+          lazydocker --version
+          tflint --version
+          uv --version
+          terraform-docs --version
+          glow --version
+          vale --version
+          aws --version
+          sam --version
+          aws-vault --version
+          kubectl version --client
+          fzf --version
+          nvim --version
+          rgrep --version
+          fd --version
+          tree-sitter --version
+          pnpm --version
+          gh --version
+          git-checkout-branch -a
+          k9s version
+          rustc --version
+          kustomize version
+          cloudflared version
+          yq --version
+          ct version
+          rain version
+          mdformat --version
+          pre-commit --version
+          nvm version
+          go version
+          npm --version
   verify_macos:
     # needs: check
     strategy:
