@@ -44,6 +44,8 @@ jobs:
         run: |
           brew update
           brew install ansible
+          brew link --overwrite
+          brew doctor
       - name: Add git dirs to path
         run: |
           echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
