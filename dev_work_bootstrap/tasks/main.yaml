@@ -575,7 +575,7 @@
         src: "https://github.com/cli/cli/releases/download/{{ gh_latest.json.tag_name }}/{{ gh_dir_name }}.zip"
         dest: $HOME/.local/
         include:
-          - "gh"
+          - "{{ gh_dir_name }}/bin/gh"
         keep_newer: true
         remote_src: true
         extra_opts:
