@@ -533,11 +533,6 @@
   tags:
     - gh
   block:
-    - name: Set gh facts
-      ansible.builtin.set_fact:
-        gh_dir_name: "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_\
-          {{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}_\
-          {{ gh[ansible_system][ansible_architecture] }}"
     - name: Find latest version
       ansible.builtin.uri:
         url: https://github.com/cli/cli/releases/latest
@@ -545,6 +540,11 @@
           Accept: application/json
         status_code: 200
       register: gh_latest
+    - name: Set gh facts
+      ansible.builtin.set_fact:
+        gh_dir_name: "gh_{{ gh_latest.json.tag_name | replace('v', '') }}_\
+          {{ 'macOS' if ansible_system == 'Darwin' else ansible_system | lower }}_\
+          {{ gh[ansible_system][ansible_architecture] }}"
     - name: Download
       ansible.builtin.unarchive:
         src: "https://github.com/cli/cli/releases/download/\
