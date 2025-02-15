@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install backblaze cli on linux
   when: ansible_system == "Linux"
   ansible.builtin.unarchive: https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux

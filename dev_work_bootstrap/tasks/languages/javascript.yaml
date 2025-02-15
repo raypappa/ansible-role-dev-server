@@ -1,3 +1,5 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install nvm # noqa: latest[git]
   ansible.builtin.git:
     repo: https://github.com/nvm-sh/nvm.git

@@ -1,6 +1,5 @@
-# SPDX-License-Identifier: MIT-0
 ---
-# tasks file for dev_work_bootstrap
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install OS Specific packages
   ansible.builtin.include_tasks: "os_family/{{ ansible_os_family | lower }}.yaml"
 - name: WSL
