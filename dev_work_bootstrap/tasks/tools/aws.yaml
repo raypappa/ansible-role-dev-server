@@ -8,6 +8,8 @@
         - aws-cli
       community.general.homebrew:
         name: awscli
+        state: "latest"
+        install_options: overwrite
     - name: Install aws cli for linux
       when: ansible_system == "Linux"
       tags:
@@ -38,6 +40,8 @@
         - aws-sam-cli
       community.general.homebrew:
         name: aws-sam-cli
+        state: "latest"
+        install_options: overwrite
     - name: Install aws sam CLI for linux
       when: ansible_system == "Linux"
       tags:
@@ -73,6 +77,8 @@
       when: ansible_system == "Darwin"
       community.general.homebrew:
         name: aws-vault
+        state: "latest"
+        install_options: overwrite
     - name: Install aws-vault on linux
       when: ansible_system == "Linux"
       ansible.builtin.get_url:

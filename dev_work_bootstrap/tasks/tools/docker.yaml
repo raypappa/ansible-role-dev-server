@@ -5,6 +5,8 @@
     - name: Install docker for Darwin
       when: ansible_system == "Darwin"
       community.general.homebrew:
+        state: "latest"
+        install_options: overwrite
         name:
           - docker
           - docker-completion

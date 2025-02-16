@@ -67,10 +67,6 @@
             {{ '-musl' if ansible_architecture == 'x86_64' else '-gnu' if ansible_system == 'Linux' else '' }}"
     - name: Install ripgrep
       ansible.builtin.unarchive:
-        # ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz
-        # ripgrep-14.1.1-x86_64-apple-darwin.tar.gz
-        # ripgrep-14.1.1-aarch64-apple-darwin.tar.gz
-        # ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz
         src: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name }}/{{ ripgrep_dir }}.tar.gz"
         dest: $HOME/.local/bin/
         include:
