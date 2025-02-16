@@ -47,6 +47,7 @@ jobs:
           brew cleanup
       - name: Add git dirs to path
         run: |
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
           echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
           echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
@@ -76,7 +77,7 @@ jobs:
           kubectl version --client
           fzf --version
           nvim --version
-          rgrep --version
+          rg --version
           fd --version
           tree-sitter --version
           pnpm --version
