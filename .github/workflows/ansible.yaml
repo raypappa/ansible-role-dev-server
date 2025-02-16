@@ -19,15 +19,15 @@ jobs:
         with:
           requirements_file: dev_work_bootstrap/meta/requirements.yml
   verify:
-    # needs: lint
+    needs: lint
     strategy:
       fail-fast: false
       matrix:
         os:
-          # - ubuntu-24.04-arm
-          # - ubuntu-latest
+          - ubuntu-24.04-arm
+          - ubuntu-latest
           - macos-13
-          # - macos-latest
+          - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
