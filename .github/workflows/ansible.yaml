@@ -45,6 +45,7 @@ jobs:
           brew update
           brew install ansible
           brew cleanup
+          brew install python --skip-link
           brew install awscli --overwrite
       - name: Add git dirs to path
         run: |
