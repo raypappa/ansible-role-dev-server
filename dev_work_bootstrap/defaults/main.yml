@@ -181,3 +181,10 @@ brew_packages:
   - alacritty
   - visual-studio-code
   - alfred
+ripgrep_suffix:
+  Linux:
+    x86_64: "-musl"
+    aarch64: "-gnu"
+  Darwin:
+    x86_64: ""
+    arm64: ""
