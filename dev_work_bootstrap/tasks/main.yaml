@@ -13,7 +13,6 @@
   ansible.builtin.include_tasks: shell.yaml
   tags:
     - shell
-
 - name: Include go tasks
   ansible.builtin.include_tasks: languages/go.yaml
   tags:
