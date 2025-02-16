@@ -42,11 +42,19 @@ jobs:
       - name: Install Ansible
         if: ${{ runner.os == 'macOS' }}
         run: |
+          echo updating brew
           brew update
+          echo installing ansible
           brew install ansible
+          echo cleaning up brew
           brew cleanup
+          echo unlink python@3.12
+          brew unlink python@3.12
+          echo link python@3.12
           brew link --overwrite python@3.12
+          echo install python
           brew install python --skip-link
+          echo install awscli
           brew install awscli --overwrite
       - name: Add git dirs to path
         run: |
