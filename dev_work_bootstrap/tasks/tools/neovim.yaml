@@ -64,7 +64,7 @@
       ansible.builtin.set_fact:
         ripgrep_dir: "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ripgrep[ansible_system][ansible_architecture] }}-\
             {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-            {{ '-musl' if ansible_architecture == 'x86_64' else '-gnu' if ansible_system == 'Linux' else '' }}"
+            {{ {{'-musl' if ansible_architecture == 'x86_64' else '-gnu'}} if ansible_system == 'Linux' else '' }}"
     - name: Install ripgrep
       ansible.builtin.unarchive:
         src: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name }}/{{ ripgrep_dir }}.tar.gz"

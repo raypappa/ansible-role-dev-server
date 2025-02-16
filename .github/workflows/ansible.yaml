@@ -41,21 +41,19 @@ jobs:
         run: python -m pip install ansible
       - name: Install Ansible
         if: ${{ runner.os == 'macOS' }}
+        # Installing Ansible because testing requires it.
+        # However python in gha is not install via brew but python is needed by
+        # other dependencies but the link is broken. So in order to fix it we
+        # need to unlink python, redo the link, then install python which
+        # upgrades python 3.12 and 3.13. Then we can install other things via
+        # ansible.
         run: |
-          echo updating brew
           brew update
-          echo installing ansible
           brew install ansible
-          echo cleaning up brew
           brew cleanup
-          echo unlink python@3.12
           brew unlink python@3.12
-          echo link python@3.12
           brew link --overwrite python@3.12
-          echo install python
           brew install python --skip-link
-          echo install awscli
-          brew install awscli --overwrite
       - name: Add git dirs to path
         run: |
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
