@@ -71,7 +71,7 @@
 #     curl -L -s https://github.com/alacritty/alacritty/releases/latest/download/alacritty.info | sudo tic -xe alacritty,alacritty-direct -
 #   tags:
 #     - alacritty
-- name: Install oh-my-zsh
+- name: Install oh-my-zsh # noqa: latest[git]
   ansible.builtin.git:
     dest: $HOME/.oh-my-zsh/
     repo: https://github.com/ohmyzsh/ohmyzsh.git

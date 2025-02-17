@@ -62,9 +62,10 @@
       register: ripgrep_latest
     - name: Set ripgrep facts
       ansible.builtin.set_fact:
-        ripgrep_dir: "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ripgrep[ansible_system][ansible_architecture] }}-\
-            {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-            {{ ripgrep_suffix[ansible_system][ansible_architecture] }}"
+        ripgrep_dir:
+          "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ripgrep[ansible_system][ansible_architecture] }}-\
+          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
+          {{ ripgrep_suffix[ansible_system][ansible_architecture] }}"
     - name: Install ripgrep
       ansible.builtin.unarchive:
         src: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name }}/{{ ripgrep_dir }}.tar.gz"
@@ -90,7 +91,8 @@
       register: fd_latest
     - name: Set fd facts
       ansible.builtin.set_fact:
-        fd_dir_name: "fd-{{ fd_latest.json.tag_name }}-{{ fd[ansible_system][ansible_architecture] }}-\
+        fd_dir_name:
+          "fd-{{ fd_latest.json.tag_name }}-{{ fd[ansible_system][ansible_architecture] }}-\
           {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
           {{ '-gnu' if ansible_system == 'Linux' else '' }}"
     - name: Install fd
@@ -119,7 +121,8 @@
         # TODO(craig): check ansible_system is Darwin or MacOS
         # https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-Darwin-x64.gz
 
-        url: "https://github.com/tree-sitter/tree-sitter/releases/latest/download/\
+        url:
+          "https://github.com/tree-sitter/tree-sitter/releases/latest/download/\
           tree-sitter-{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}-\
           {{ tree_sitter[ansible_system][ansible_architecture] }}.gz"
         dest: "{{ tree_sitter_tmp_dir.path }}/tree-sitter.gz"
@@ -137,3 +140,9 @@
     url: https://github.com/mikefarah/yq/releases/latest/download/yq_{{ ansible_system | lower }}_{{ yq[ansible_system][ansible_architecture] }}
     dest: $HOME/.local/bin/yq
     mode: "0755"
+- name: Install aider with uv
+  tags:
+    - aider
+  ansible.builtin.command:
+    cmd: uv tool install --force --python python3.12 aider-chat@latest
+  creates: $HOME/.local/bin/aider
