@@ -6,6 +6,7 @@
     update_cache: true
     name:
       - python3-apt
+      - command-not-found
       - tmux
       # pyenv dependencies
       - build-essential

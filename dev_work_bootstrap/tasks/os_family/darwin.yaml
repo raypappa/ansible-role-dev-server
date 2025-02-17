@@ -11,3 +11,7 @@
     name: "{{ brew_packages }}"
     state: "latest"
     install_options: overwrite
+- name: Tap a homebrew repository
+  community.general.homebrew_tap:
+    name:
+      - homebrew/command-not-found
