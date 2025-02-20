@@ -8,7 +8,7 @@
     update: true
 - name: Ensure rbenv plugins directory exists
   ansible.builtin.file:
-    type: directory
+    state: directory
     path: $HOME/.rbenv/plugins
     mode: "0755"
 - name: Install rbenv-build # noqa: latest[git]
