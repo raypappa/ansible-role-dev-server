@@ -1,0 +1,4 @@
+- name: Install beautysh via uv
+  ansible.builtin.command:
+    cmd: uv tool install beautysh
+    creates: $HOME/.local/bin/beautysh

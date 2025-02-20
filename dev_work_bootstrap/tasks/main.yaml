@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install OS Specific packages
   ansible.builtin.include_tasks: "os_family/{{ ansible_os_family | lower }}.yaml"
@@ -33,8 +32,6 @@
   ansible.builtin.include_tasks: languages/rust.yaml
   tags:
     - rust
-
-
 - name: Include cloudflared tasks
   ansible.builtin.include_tasks: tools/cloudflared.yaml
   tags:
@@ -75,3 +72,7 @@
   ansible.builtin.include_tasks: tools/backblaze.yaml
   tags:
     - backblaze
+- name: Include beautysh tasks
+  ansible.builtin.include_tasks: tools/beautysh.yaml
+  tags:
+    - beautysh

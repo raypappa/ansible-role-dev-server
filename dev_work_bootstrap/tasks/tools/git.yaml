@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install Git-plugins # noqa: latest[git]
   tags:
@@ -10,14 +9,9 @@
 - name: Install git-checkout-branch
   tags:
     - git-checkout-branch
-  block:
-    - name: Install git-checkout-branch on amd64
-      when: ansible_architecture == "amd64"
-      ansible.builtin.get_url:
-        url: https://github.com/royeo/git-checkout-branch/releases/latest/download/git-checkout-branch-{{ ansible_system }}-{{ ansible_architecture }}
-        dest: $HOME/.local/bin/git-checkout-branch
-        mode: "0755"
-    # TODO(raypappa): go install github.com/royeo/git-checkout-branch@latest for arm64
+  ansible.builtin.command:
+    cmd: go install royeo/git-checkout-branch@latest
+    creates: $HOME/.local/bin/git-checkout-branch
 - name: Install pre-commit via uv # noqa: no-changed-when
   tags:
     - pre-commit
