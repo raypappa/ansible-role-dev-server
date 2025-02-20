@@ -17,11 +17,6 @@
     - name: Ensure dotfile repo is up to date
       ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
         cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
-    - name: dotfiles do not show untracked files
-      community.general.git_config:
-        repo: $HOME/.cfg
-        name: status.showUntrackedFiles
-        value: "no"
 - name: Setup authorized_keys
   tags:
     - authorized_keys
@@ -88,7 +83,7 @@
     scope: global
     name: push.default
     value: upstream
-- name: Install autoenv
+- name: Install autoenv # noqa: latest[git]
   ansible.builtin.git:
     repo: https://github.com/hyperupcall/autoenv
     dest: $HOME/.autoenv

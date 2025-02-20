@@ -11,7 +11,7 @@
     type: directory
     path: $HOME/.rbenv/plugins
     mode: "0755"
-- name: Install rbenv-build
+- name: Install rbenv-build # noqa: latest[git]
   tags:
     - rbenv-build
   ansible.builtin.git:
