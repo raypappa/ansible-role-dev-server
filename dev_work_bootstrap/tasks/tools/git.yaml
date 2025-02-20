@@ -19,7 +19,7 @@
   ansible.builtin.command:
     cmd: uv tool install pre-commit
     creates: $HOME/.local/bin/pre-commit
-- name: Install git-extras
+- name: Install git-extras # noqa: latest[git]
   ansible.builtin.git:
     repo: https://github.com/tj/git-extras.git
     dest: $HOME/.git-extras
