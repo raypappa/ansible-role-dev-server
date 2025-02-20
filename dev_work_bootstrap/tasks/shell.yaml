@@ -18,7 +18,7 @@
       ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
         cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
     - name: dotfiles do not show untracked files
-      general.community.git_config:
+      community.general.git_config:
         repo: $HOME/.cfg
         name: status.showUntrackedFiles
         value: "no"
