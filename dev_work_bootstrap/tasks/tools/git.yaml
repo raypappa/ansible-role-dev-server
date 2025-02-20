@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install Git-plugins # noqa: latest[git]
   tags:
@@ -18,3 +19,8 @@
   ansible.builtin.command:
     cmd: uv tool install pre-commit
     creates: $HOME/.local/bin/pre-commit
+- name: Install git-extras
+  ansible.builtin.git:
+    repo: https://github.com/tj/git-extras.git
+    dest: $HOME/.git-extras
+    update: true
