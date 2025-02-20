@@ -11,7 +11,7 @@
   tags:
     - git-checkout-branch
   ansible.builtin.command:
-    cmd: go install royeo/git-checkout-branch@latest
+    cmd: go install github.com/royeo/git-checkout-branch@latest
     creates: $HOME/.local/bin/git-checkout-branch
 - name: Install pre-commit via uv # noqa: no-changed-when
   tags:
