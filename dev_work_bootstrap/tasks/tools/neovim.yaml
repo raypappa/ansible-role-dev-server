@@ -13,9 +13,9 @@
       register: fzf_latest
     - name: Download fzf
       ansible.builtin.unarchive:
-        src: "https://github.com/junegunn/fzf/releases/download/\
-          {{ fzf_latest.json.tag_name }}/fzf-{{ fzf_latest.json.tag_name | replace('v', '') }}-\
-          {{ ansible_system }}_{{ fzf[ansible_system][ansible_architecture] }}.tar.gz"
+        src: "https://github.com/junegunn/fzf/releases/download/{{ fzf_latest.json.tag_name
+          }}/fzf-{{ fzf_latest.json.tag_name | replace('v', '') }}-{{ ansible_system
+          }}_{{ fzf[ansible_system][ansible_architecture] }}.tar.gz"
         dest: $HOME/.local/bin/
         include:
           - fzf
@@ -28,7 +28,8 @@
   block:
     - name: Set neovim facts
       ansible.builtin.set_fact:
-        neovim_system: "{{ 'macos' if ansible_system == 'Darwin' else ansible_system | lower }}"
+        neovim_system: "{{ 'macos' if ansible_system == 'Darwin' else ansible_system
+          | lower }}"
     - name: Create temp directory for neovim
       ansible.builtin.file:
         path: $HOME/.local/nvim
@@ -37,7 +38,8 @@
     - name: Download neovim
       ansible.builtin.unarchive:
         # ansible_system might be macos not Darwin.
-        src: https://github.com/neovim/neovim/releases/latest/download/nvim-{{ neovim_system }}-{{ neovim[ansible_system][ansible_architecture] }}.tar.gz
+        src: https://github.com/neovim/neovim/releases/latest/download/nvim-{{ neovim_system
+          }}-{{ neovim[ansible_system][ansible_architecture] }}.tar.gz
         remote_src: true
         keep_newer: true
         mode: "0755"
@@ -62,13 +64,13 @@
       register: ripgrep_latest
     - name: Set ripgrep facts
       ansible.builtin.set_fact:
-        ripgrep_dir:
-          "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ripgrep[ansible_system][ansible_architecture] }}-\
-          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-          {{ ripgrep_suffix[ansible_system][ansible_architecture] }}"
+        ripgrep_dir: "ripgrep-{{ ripgrep_latest.json.tag_name }}-{{ ripgrep[ansible_system][ansible_architecture]
+          }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system
+          | lower }}{{ ripgrep_suffix[ansible_system][ansible_architecture] }}"
     - name: Install ripgrep
       ansible.builtin.unarchive:
-        src: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name }}/{{ ripgrep_dir }}.tar.gz"
+        src: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_latest.json.tag_name
+          }}/{{ ripgrep_dir }}.tar.gz"
         dest: $HOME/.local/bin/
         include:
           - "{{ ripgrep_dir }}/rg"
@@ -91,14 +93,13 @@
       register: fd_latest
     - name: Set fd facts
       ansible.builtin.set_fact:
-        fd_dir_name:
-          "fd-{{ fd_latest.json.tag_name }}-{{ fd[ansible_system][ansible_architecture] }}-\
-          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-          {{ '-gnu' if ansible_system == 'Linux' else '' }}"
+        fd_dir_name: "fd-{{ fd_latest.json.tag_name }}-{{ fd[ansible_system][ansible_architecture]
+          }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system
+          | lower }}{{ '-gnu' if ansible_system == 'Linux' else '' }}"
     - name: Install fd
       ansible.builtin.unarchive:
-        src: "https://github.com/sharkdp/fd/releases/download/\
-          {{ fd_latest.json.tag_name }}/{{ fd_dir_name }}.tar.gz"
+        src: "https://github.com/sharkdp/fd/releases/download/{{ fd_latest.json.tag_name
+          }}/{{ fd_dir_name }}.tar.gz"
         dest: $HOME/.local/bin/
         include:
           - "{{ fd_dir_name }}/fd"
@@ -118,13 +119,9 @@
       register: tree_sitter_tmp_dir
     - name: Download tree-sitter
       ansible.builtin.get_url:
-        # TODO(craig): check ansible_system is Darwin or MacOS
-        # https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-Darwin-x64.gz
-
-        url:
-          "https://github.com/tree-sitter/tree-sitter/releases/latest/download/\
-          tree-sitter-{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}-\
-          {{ tree_sitter[ansible_system][ansible_architecture] }}.gz"
+        url: "https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-{{
+          'macos' if ansible_system == 'Darwin' else 'linux' }}-{{ tree_sitter[ansible_system][ansible_architecture]
+          }}.gz"
         dest: "{{ tree_sitter_tmp_dir.path }}/tree-sitter.gz"
         mode: "0644"
     - name: Install tree-sitter
@@ -137,7 +134,8 @@
   tags:
     - yq
   ansible.builtin.get_url:
-    url: https://github.com/mikefarah/yq/releases/latest/download/yq_{{ ansible_system | lower }}_{{ yq[ansible_system][ansible_architecture] }}
+    url: https://github.com/mikefarah/yq/releases/latest/download/yq_{{ ansible_system
+      | lower }}_{{ yq[ansible_system][ansible_architecture] }}
     dest: $HOME/.local/bin/yq
     mode: "0755"
 - name: Install aider with uv
@@ -145,4 +143,4 @@
     - aider
   ansible.builtin.command:
     cmd: uv tool install --force --python python3.12 aider-chat@latest
-  creates: $HOME/.local/bin/aider
+    creates: $HOME/.local/bin/aider

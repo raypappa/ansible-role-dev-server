@@ -1,3 +1,4 @@
+---
 - name: Find the latest version of trivy
   ansible.builtin.uri:
     url: https://github.com/aquasecurity/trivy/releases/latest
@@ -7,7 +8,10 @@
   register: trivy_latest
 - name: Install trivy
   ansible.builtin.unarchive:
-    src: "https://github.com/aquasecurity/trivy/releases/download/{{ trivy_latest.json.tag_name }}/trivy_{{ trivy_latest | replace('v', '') }}_{{ 'macOS' if ansible_system == 'Darwin' else ansible_system }}-{{ trivy[ansible_system][ansible_architecture] }}.tar.gz"
+    src: "https://github.com/aquasecurity/trivy/releases/download/{{ trivy_latest.json.tag_name
+      }}/trivy_{{ trivy_latest | replace('v', '') }}_{{ 'macOS' if ansible_system
+      == 'Darwin' else ansible_system }}-{{ trivy[ansible_system][ansible_architecture]
+      }}.tar.gz"
     dest: $HOME/.local/bin
     keep_newer: true
     remote_src: true
