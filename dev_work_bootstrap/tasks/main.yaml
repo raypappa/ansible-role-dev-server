@@ -76,3 +76,7 @@
   ansible.builtin.include_tasks: tools/beautysh.yaml
   tags:
     - beautysh
+- name: Include trivy tasks
+  ansible.builtin.include_tasks: tools/trivy.yaml
+  tags:
+    - trivy
