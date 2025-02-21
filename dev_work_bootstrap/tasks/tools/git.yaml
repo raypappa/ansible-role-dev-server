@@ -7,7 +7,7 @@
     repo: https://github.com/afeld/git-plugins.git
     dest: $HOME/.git-plugins
     update: true
-- name: Install git-checkout-branch
+- name: Install git-checkout-branch # noqa: command-instead-of-shell
   tags:
     - git-checkout-branch
   ansible.builtin.shell:
