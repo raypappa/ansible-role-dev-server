@@ -9,7 +9,7 @@
 - name: Install mise
   ansible.builtin.unarchive:
     src: "https://github.com/jdx/mise/releases/download/{{ mise_latest.json.tag_name
-      }}/mise-{{ mise_latest.json.tag_name }}_{{ 'macOS' if ansible_system == 'Darwin'
+      }}/mise-{{ mise_latest.json.tag_name }}-{{ 'macos' if ansible_system == 'Darwin'
       else ansible_system | lower }}-{{ mise[ansible_system][ansible_architecture]
       }}.tar.gz"
     dest: $HOME/.local/bin
