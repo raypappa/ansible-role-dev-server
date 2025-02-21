@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
 - name: Install OS Specific packages
   ansible.builtin.include_tasks: "os_family/{{ ansible_os_family | lower }}.yaml"
@@ -12,6 +13,10 @@
   ansible.builtin.include_tasks: shell.yaml
   tags:
     - shell
+- name: Include mise tasks
+  ansible.builtin.include_tasks: tools/mise.yaml
+  tags:
+    - mise
 - name: Include go tasks
   ansible.builtin.include_tasks: languages/go.yaml
   tags:
