@@ -65,7 +65,7 @@ jobs:
       - name: "Execute commands"
         run: |
           mise --version
-          mise install
+          mise install --jobs=1
           uv --version
           aqua --version
           ubi --version
