@@ -66,4 +66,34 @@ jobs:
         run: |
           mise --version
           mise install
-          mise ls
+          tmux -V
+          task --version
+          lazydocker --version
+          tflint --version
+          uv --version
+          terraform-docs --version
+          terraform -version
+          glow --version
+          vale --version
+          aws --version
+          sam --version
+          aws-vault --version
+          kubectl version --client
+          fzf --version
+          nvim --version
+          rg --version
+          fd --version
+          tree-sitter --version
+          pnpm --version
+          gh --version
+          k9s version
+          rustc --version
+          kustomize version
+          cloudflared version
+          yq --version
+          ct version
+          rain --version
+          mdformat --version
+          pre-commit --version
+          go version
+          b2 version
