@@ -65,3 +65,5 @@ jobs:
       - name: "Execute commands"
         run: |
           mise --version
+          mise install
+          mise ls
