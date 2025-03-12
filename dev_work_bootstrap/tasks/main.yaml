@@ -13,34 +13,6 @@
   ansible.builtin.include_tasks: shell.yaml
   tags:
     - shell
-- name: Include mise tasks
-  ansible.builtin.include_tasks: tools/mise.yaml
-  tags:
-    - mise
-- name: Include go tasks
-  ansible.builtin.include_tasks: languages/go.yaml
-  tags:
-    - go
-- name: Include python tasks
-  ansible.builtin.include_tasks: languages/python.yaml
-  tags:
-    - python
-- name: Include javascript tasks
-  ansible.builtin.include_tasks: languages/javascript.yaml
-  tags:
-    - javascript
-- name: Include ruby tasks
-  ansible.builtin.include_tasks: languages/ruby.yaml
-  tags:
-    - ruby
-- name: Include rust tasks
-  ansible.builtin.include_tasks: languages/rust.yaml
-  tags:
-    - rust
-- name: Include cloudflared tasks
-  ansible.builtin.include_tasks: tools/cloudflared.yaml
-  tags:
-    - cloudflared
 - name: Include winget tasks
   ansible.builtin.include_tasks: tools/winget.yaml
   tags:
@@ -49,39 +21,11 @@
   ansible.builtin.include_tasks: tools/git.yaml
   tags:
     - git
-- name: Include terraform tasks
-  ansible.builtin.include_tasks: tools/terraform.yaml
-  tags:
-    - terraform
-- name: Include kubernetes tasks
-  ansible.builtin.include_tasks: tools/kubernetes.yaml
-  tags:
-    - kubernetes
 - name: Include docker tasks
   ansible.builtin.include_tasks: tools/docker.yaml
   tags:
     - docker
-- name: Include markdown tasks
-  ansible.builtin.include_tasks: tools/markdown.yaml
-  tags:
-    - markdown
-- name: Include aws tasks
-  ansible.builtin.include_tasks: tools/aws.yaml
-  tags:
-    - aws
 - name: Include neovim tasks
   ansible.builtin.include_tasks: tools/neovim.yaml
   tags:
     - neovim
-- name: Include backblaze tasks
-  ansible.builtin.include_tasks: tools/backblaze.yaml
-  tags:
-    - backblaze
-- name: Include beautysh tasks
-  ansible.builtin.include_tasks: tools/beautysh.yaml
-  tags:
-    - beautysh
-- name: Include trivy tasks
-  ansible.builtin.include_tasks: tools/trivy.yaml
-  tags:
-    - trivy

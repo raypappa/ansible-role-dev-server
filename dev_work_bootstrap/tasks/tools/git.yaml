@@ -7,18 +7,6 @@
     repo: https://github.com/afeld/git-plugins.git
     dest: $HOME/.git-plugins
     update: true
-- name: Install git-checkout-branch # noqa: command-instead-of-shell
-  tags:
-    - git-checkout-branch
-  ansible.builtin.shell:
-    cmd: go install github.com/royeo/git-checkout-branch@latest
-    creates: $HOME/.local/bin/git-checkout-branch
-- name: Install pre-commit via uv # noqa: no-changed-when
-  tags:
-    - pre-commit
-  ansible.builtin.command:
-    cmd: uv tool install pre-commit
-    creates: $HOME/.local/bin/pre-commit
 - name: Install git-extras # noqa: latest[git]
   ansible.builtin.git:
     repo: https://github.com/tj/git-extras.git

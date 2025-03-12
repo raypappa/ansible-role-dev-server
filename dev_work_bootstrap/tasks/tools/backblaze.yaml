@@ -1,6 +1,0 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
-- name: Install backblaze cli
-  ansible.builtin.command:
-    cmd: uv tool install b2[full]
-    creates: $HOME/.local/bin/b2

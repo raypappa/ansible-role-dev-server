@@ -10,30 +10,25 @@
     path: "{{ item }}"
     state: directory
     mode: "0755"
-- name: Install uv
-  tags:
-    - uv
+- name: Install mise block
   block:
-    - name: Set uv facts
-      ansible.builtin.set_fact:
-        uv_dir_name: "uv-{{ uv[ansible_system][ansible_architecture] }}-\
-          {{ 'apple' if ansible_system == 'Darwin' else 'unknown' }}-{{ ansible_system | lower }}\
-          {{ '-gnu' if ansible_system == 'Linux' else '' }}"
-    - name: Install uv
+    - name: Find the latest version of mise
+      ansible.builtin.uri:
+        url: https://github.com/jdx/mise/releases/latest
+        headers:
+          Accept: application/json
+        status_code: 200
+      register: mise_latest
+    - name: Install mise
       ansible.builtin.unarchive:
-        src: "https://github.com/astral-sh/uv/releases/latest/download/{{ uv_dir_name }}.tar.gz"
-        remote_src: true
+        src: "https://github.com/jdx/mise/releases/download/{{ mise_latest.json.tag_name
+          }}/mise-{{ mise_latest.json.tag_name }}-{{ 'macos' if ansible_system ==
+          'Darwin' else ansible_system | lower }}-{{ mise[ansible_system][ansible_architecture]
+          }}.tar.gz"
+        dest: $HOME/.local/bin
         keep_newer: true
-        mode: "0755"
-        dest: $HOME/.local/bin/
-        creates: $HOME/.local/bin/uvx
+        remote_src: true
         include:
-          - "{{ uv_dir_name }}/uv"
-          - "{{ uv_dir_name }}/uvx"
+          - mise/bin/mise
         extra_opts:
-          - --strip-components=1
-
-- name: Include taskfile tasks
-  ansible.builtin.include_tasks: tools/taskfile.yaml
-  tags:
-    - taskfile
+          - --strip-components=2
