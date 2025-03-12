@@ -57,10 +57,6 @@ jobs:
       - name: Add git dirs to path
         run: |
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.pyenv/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.goenv/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.rbenv/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.tfenv/bin" >> "$GITHUB_PATH"
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v3
         with:
@@ -68,45 +64,4 @@ jobs:
           directory: ./
       - name: "Execute commands"
         run: |
-          pyenv version
-          goenv version
-          rbenv version
-          tenv version
-          tmux -V
-          task --version
-          lazydocker --version
-          tflint --version
-          uv --version
-          terraform-docs --version
-          glow --version
-          vale --version
-          aws --version
-          sam --version
-          aws-vault --version
-          kubectl version --client
-          fzf --version
-          nvim --version
-          rg --version
-          fd --version
-          tree-sitter --version
-          pnpm --version
-          gh --version
-          k9s version
-          rustc --version
-          kustomize version
-          cloudflared version
-          yq --version
-          ct version
-          rain --version
-          mdformat --version
-          pre-commit --version
-          . $HOME/.nvm/nvm.sh
-          nvm version
-          npm --version
-          export GOENV_ROOT="$HOME/.goenv"
-          export PATH="$GOENV_ROOT/bin:$PATH"
-          eval "$(goenv init -)"
-          export PATH="$GOROOT/bin:$PATH"
-          export PATH="$PATH:$GOPATH/bin"
-          go version
-          b2 version
+          mise --version

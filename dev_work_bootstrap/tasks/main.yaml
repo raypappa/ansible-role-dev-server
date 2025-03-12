@@ -25,7 +25,3 @@
   ansible.builtin.include_tasks: tools/docker.yaml
   tags:
     - docker
-- name: Include neovim tasks
-  ansible.builtin.include_tasks: tools/neovim.yaml
-  tags:
-    - neovim

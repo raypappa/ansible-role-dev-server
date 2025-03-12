@@ -1,8 +1,0 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks
-- name: Install aider with uv
-  tags:
-    - aider
-  ansible.builtin.command:
-    cmd: uv tool install --force --python python3.12 aider-chat@latest
-    creates: $HOME/.local/bin/aider
