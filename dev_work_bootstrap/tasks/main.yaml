@@ -134,3 +134,8 @@
       - docker
       - docker-completion
       - docker-buildx
+- name: Install zsh aws vault plugin # noqa: latest[git]
+  ansible.builtin.git:
+    repo: https://github.com/blimmer/zsh-aws-vault.git
+    dest: $HOME/.oh-my-zsh/custom/plugins/zsh-aws-vault
+    update: true
