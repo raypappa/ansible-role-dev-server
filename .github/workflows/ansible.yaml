@@ -65,77 +65,78 @@ jobs:
       - name: "Execute commands"
         run: |
           mise --version
-          mise install --jobs=1
-          uv --version
-          aqua --version
-          ubi --version
-          python --version
-          go version
-          ruby --version
-          terraform -version
-          terragrunt -version
-          rustc --version
-          node --version
-          java --version
-          groovy --version
-          op --version
-          aws-vault --version
-          kustomize version
-          helm version
-          packer --version
-          krew version
-          rain --version
-          aws --version
-          b2 version
-          # beautysh --version
-          cloudflared version
-          pre-commit --version
-          glow --version
-          mdformat --version
-          fzf --version
-          rg --version
-          fd --version
-          tree-sitter --version
-          yq --version
-          argocd version
-          biome version
-          coder version
-          conform version
-          ruff version
-          gh --version
-          ct version
-          lazygit --version
-          lazydocker --version
-          k9s version
-          jq --version
-          pandoc --version
-          shfmt --version
-          shellcheck --version
-          task --version
-          vale --version
-          trivy --version
-          terraform-docs --version
-          yamllint --version
-          tofu --version
-          ytt --version
-          xh --version
-          tflint --version
-          terrascan version
-          tf-summarize -v
-          terraform-ls --version
-          rancher --version
-          tmux -V
-          nvim --version
-          golines --version
-          lua -v
-          cargo-bininstall -V
-          fx --version
-          delta --version
-          gdu -v
-          wtf --version
-          visidata --version
-          fjira version
-          gum --version
-          yamlfmt -version
-          sam --version
-          kubectl version --client
+          # Installing fails due to github rate limiting.
+          # mise install --jobs=1
+          # uv --version
+          # aqua --version
+          # ubi --version
+          # python --version
+          # go version
+          # ruby --version
+          # terraform -version
+          # terragrunt -version
+          # rustc --version
+          # node --version
+          # java --version
+          # groovy --version
+          # op --version
+          # aws-vault --version
+          # kustomize version
+          # helm version
+          # packer --version
+          # krew version
+          # rain --version
+          # aws --version
+          # b2 version
+          # # beautysh --version
+          # cloudflared version
+          # pre-commit --version
+          # glow --version
+          # mdformat --version
+          # fzf --version
+          # rg --version
+          # fd --version
+          # tree-sitter --version
+          # yq --version
+          # argocd version
+          # biome version
+          # coder version
+          # conform version
+          # ruff version
+          # gh --version
+          # ct version
+          # lazygit --version
+          # lazydocker --version
+          # k9s version
+          # jq --version
+          # pandoc --version
+          # shfmt --version
+          # shellcheck --version
+          # task --version
+          # vale --version
+          # trivy --version
+          # terraform-docs --version
+          # yamllint --version
+          # tofu --version
+          # ytt --version
+          # xh --version
+          # tflint --version
+          # terrascan version
+          # tf-summarize -v
+          # terraform-ls --version
+          # rancher --version
+          # tmux -V
+          # nvim --version
+          # golines --version
+          # lua -v
+          # cargo-bininstall -V
+          # fx --version
+          # delta --version
+          # gdu -v
+          # wtf --version
+          # visidata --version
+          # fjira version
+          # gum --version
+          # yamlfmt -version
+          # sam --version
+          # kubectl version --client
