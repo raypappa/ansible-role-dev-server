@@ -181,6 +181,11 @@ brew_packages:
   - alacritty
   - visual-studio-code
   - alfred
+  - openssl@3
+  - readline
+  - libyaml
+  - gmp
+  - autoconf
 ripgrep_suffix:
   Linux:
     x86_64: "-musl"

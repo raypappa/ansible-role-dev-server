@@ -65,6 +65,9 @@ jobs:
       - name: "Execute commands"
         run: |
           mise --version
+          # Ensuring we have all the dependencies to install ruby, which requires a working rustc
+          mise install rust
+          mise install ruby
           # Installing fails due to github rate limiting.
           # mise install --jobs=1
           # uv --version

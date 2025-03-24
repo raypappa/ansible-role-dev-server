@@ -7,7 +7,6 @@
     name:
       - python3-apt
       - command-not-found
-      - tmux
       # pyenv dependencies
       - build-essential
       - libssl-dev
@@ -24,4 +23,19 @@
       - libxmlsec1-dev
       - libffi-dev
       - liblzma-dev
+      # ruby-build dependencies
+      - autoconf
+      - patch
+      - build-essential
+      - libssl-dev
+      - libyaml-dev
+      - libreadline6-dev
+      - zlib1g-dev
+      - libgmp-dev
+      - libncurses5-dev
+      - libffi-dev
+      - libgdbm6
+      - libgdbm-dev
+      - libdb-dev
+      - uuid-dev
     state: present
