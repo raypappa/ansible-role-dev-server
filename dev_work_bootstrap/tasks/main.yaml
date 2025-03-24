@@ -6,22 +6,131 @@
   when: '"microsoft" in ansible_facts["kernel"]'
   ansible.builtin.include_tasks: kernel/wsl.yaml
 - name: Include general tasks
-  ansible.builtin.include_tasks: general.yaml
+- name: Ensure core directories exists
+  loop:
+    - $HOME/.local
+    - $HOME/.local/bin
+    - $HOME/.local/share
+    - $HOME/.local/share/bash-completion
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+- name: Find the latest version of mise
+  ansible.builtin.uri:
+    url: https://github.com/jdx/mise/releases/latest
+    headers:
+      Accept: application/json
+    status_code: 200
+  register: mise_latest
+- name: Install mise
+  ansible.builtin.unarchive:
+    src: "https://github.com/jdx/mise/releases/download/{{ mise_latest.json.tag_name
+      }}/mise-{{ mise_latest.json.tag_name }}-{{ 'macos' if ansible_system == 'Darwin'
+      else ansible_system | lower }}-{{ mise[ansible_system][ansible_architecture]
+      }}.tar.gz"
+    dest: $HOME/.local/bin
+    keep_newer: true
+    remote_src: true
+    include:
+      - mise/bin/mise
+    extra_opts:
+      - --strip-components=2
+- name: Setup dotfiles
   tags:
-    - general
-- name: Include shell tasks
-  ansible.builtin.include_tasks: shell.yaml
+    - dotfiles
+  block:
+    - name: Clone dotfiles # noqa: latest[git]
+      ansible.builtin.git:
+        dest: $HOME/.cfg
+        repo: https://github.com/raypappa/dotfiles.git
+        bare: true
+        update: true
+    - name: Checkout dotfiles
+      ansible.builtin.command: # noqa: command-instead-of-module
+        cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout main --force
+      args:
+        creates: $HOME/.zshrc
+    - name: Ensure dotfile repo is up to date
+      ansible.builtin.command: # noqa: no-changed-when command-instead-of-module
+        cmd: git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull --force
+- name: Setup authorized_keys
   tags:
-    - shell
-- name: Include winget tasks
-  ansible.builtin.include_tasks: tools/winget.yaml
+    - authorized_keys
+  block:
+    - name: Ensure .ssh dir exists
+      ansible.builtin.file:
+        path: $HOME/.ssh
+        state: directory
+        mode: "0700"
+    - name: Create Authorized_keys
+      ansible.builtin.copy:
+        src: authorized_keys
+        dest: $HOME/.ssh/authorized_keys
+        mode: "0600"
+- name: Tmux completions
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/master/completions/tmux
+    dest: $HOME/.local/share/bash-completion/tmux.bash
+    mode: "0755"
+- name: Alacritty completions
+  ansible.builtin.get_url:
+    url: https://github.com/alacritty/alacritty/releases/latest/download/alacritty.bash
+    dest: $HOME/.local/share/bash-completion/alacritty.bash
+    mode: "0755"
   tags:
-    - winget
-- name: Include git tasks
-  ansible.builtin.include_tasks: tools/git.yaml
+    - alacritty
+# - name: Install Alacritty terminfo
+#   ansible.builtin.command: >
+#     curl -L -s https://github.com/alacritty/alacritty/releases/latest/download/alacritty.info | sudo tic -xe alacritty,alacritty-direct -
+#   tags:
+#     - alacritty
+- name: Install oh-my-zsh # noqa: latest[git]
+  ansible.builtin.git:
+    dest: $HOME/.oh-my-zsh/
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    update: true
+- name: Git config autoSetupRemote
+  community.general.git_config:
+    scope: global
+    name: push.autoSetupRemote
+    value: true
+- name: Git config push.default
+  community.general.git_config:
+    scope: global
+    name: push.default
+    value: upstream
+- name: Install komac nightly
   tags:
-    - git
-- name: Include docker tasks
-  ansible.builtin.include_tasks: tools/docker.yaml
+    - komac-nightly
+    - never
+  ansible.builtin.unarchive:
+    src: "https://github.com/russellbanks/Komac/releases/download/nightly/komac-nightly-{{
+      ansible_architecture }}-{{ 'apple' if ansible_system == 'Darwin' else 'unknown'
+      }}-{{ ansible_system | lower }}{{ '-gnu' if ansible_system == 'Linux' else ''
+      }}.tar.gz"
+    remote_src: true
+    keep_newer: true
+    mode: "0755"
+    dest: $HOME/.local/bin/
+- name: Install Git-plugins # noqa: latest[git]
   tags:
-    - docker
+    - git-plugins
+  ansible.builtin.git:
+    repo: https://github.com/afeld/git-plugins.git
+    dest: $HOME/.git-plugins
+    update: true
+- name: Install git-extras # noqa: latest[git]
+  ansible.builtin.git:
+    repo: https://github.com/tj/git-extras.git
+    dest: $HOME/.git-extras
+    update: true
+- name: Install docker for Darwin
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    state: "latest"
+    install_options: overwrite
+    name:
+      - docker
+      - docker-completion
+      - docker-buildx
