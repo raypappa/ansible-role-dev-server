@@ -5,7 +5,6 @@
 - name: WSL
   when: '"microsoft" in ansible_facts["kernel"]'
   ansible.builtin.include_tasks: kernel/wsl.yaml
-- name: Include general tasks
 - name: Ensure core directories exists
   loop:
     - $HOME/.local
